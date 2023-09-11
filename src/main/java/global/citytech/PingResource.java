@@ -6,15 +6,10 @@ import io.micronaut.http.annotation.Post;
 
 @Controller("/ping")
 public class PingResource {
-
     @Get("/")
     public String  ping(){
-       return "Test Success";
+       return "System running......";
     }
 
-    @Post("/")
-    public  String add(String name){
-        return name;
-    }
 }
 
