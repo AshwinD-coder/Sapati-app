@@ -2,15 +2,16 @@ package global.citytech.user.dto;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
+import jakarta.validation.constraints.NotNull;
 
 @Introspected
 @Serdeable
-public class UserLoginDTO {
+public class UserLoginDto {
     private String username;
 
     private String password;
 
-    public UserLoginDTO(String username, String password) {
+    public UserLoginDto(String username, String password) {
         this.username = username;
         this.password = password;
     }

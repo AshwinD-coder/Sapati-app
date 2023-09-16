@@ -1,9 +1,13 @@
 package global.citytech.user.model;
 
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.data.annotation.DateCreated;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
@@ -19,6 +23,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId;
+
     private String username;
 
     private String password;
@@ -29,42 +34,32 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private UserType userType;
-
-
-
-//    @CreationTimestamp
-//    private Timestamp createdAt;
-////
-//    @Column(name = "user_type")
-//    private String userType;
+    @DateCreated
+    private Date createdAt;
 //
-//    private Long roleId;
-//    @Column(name = "is_verified")
-//    private String verifyStatus;
+    @Column(name = "is_verified")
+    private Boolean verifyStatus;
 //
 //    @Column(name = "is_blacklist")
 //    private String blacklistStatus;
 //    private String accountStatus;
 //    private String verifiedBy;
 
-    public User(Long userId, String username, String password, String email, String phoneNumber,UserType userType) {
+    public User(Long userId, String username, String password, String email, String phoneNumber, UserType userType,Date createdAt, Boolean verifyStatus) {
         this.userId = userId;
         this.username = username;
         this.password = password;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.userType = userType;
-//        this.dateOfBirth = dateOfBirth;
-
-//        this.createdAt = createdAt;
-//        this.userType = userType;
-//        this.roleId = roleId;
-//        this.verifyStatus = verifyStatus;
+        this.createdAt = createdAt;
+        this.verifyStatus = verifyStatus;
 //        this.blacklistStatus = blacklistStatus;
 //        this.accountStatus = accountStatus;
 //        this.verifiedBy = verifiedBy;
     }
-    public User(){
+
+    public User() {
 
     }
 
@@ -115,45 +110,22 @@ public class User {
     public void setUserType(UserType userType) {
         this.userType = userType;
     }
-    //    public Date getDateOfBirth() {
-//        return dateOfBirth;
-//    }
-//
-//    public void setDateOfBirth(Date dateOfBirth) {
-//        this.dateOfBirth = dateOfBirth;
-//    }
-//
-//    public Timestamp getCreatedAt() {
-//        return createdAt;
-//    }
-//
-//    public void setCreatedAt(Timestamp createdAt) {
-//        this.createdAt = createdAt;
-//    }
-//
-//    public String getUserType() {
-//        return userType;
-//    }
-//
-//    public void setUserType(String userType) {
-//        this.userType = userType;
-//    }
-//
-//    public Long getRoleId() {
-//        return roleId;
-//    }
-//
-//    public void setRoleId(Long roleId) {
-//        this.roleId = roleId;
-//    }
-//
-//    public String getVerifyStatus() {
-//        return verifyStatus;
-//    }
-//
-//    public void setVerifyStatus(String verifyStatus) {
-//        this.verifyStatus = verifyStatus;
-//    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Boolean getVerifyStatus() {
+        return verifyStatus;
+    }
+
+    public void setVerifyStatus(Boolean verifyStatus) {
+        this.verifyStatus = verifyStatus;
+    }
 //
 //    public String getBlacklistStatus() {
 //        return blacklistStatus;
@@ -181,12 +153,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                '}';
+        return "User{" + "userId=" + userId + ", username='" + username + '\'' + ", email='" + email + '\'' + ", phoneNumber='" + phoneNumber + '\'' + '}';
     }
 }

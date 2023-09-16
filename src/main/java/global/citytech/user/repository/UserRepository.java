@@ -12,8 +12,12 @@ import java.util.Optional;
 
 @Repository
 @JdbcRepository(dialect = Dialect.POSTGRES)
-public interface UserRepository extends CrudRepository<User,Long>{
+public interface UserRepository extends CrudRepository<User, Long> {
     Optional<User> findByUsername(String username);
     Optional<User> findByUserType(UserType userType);
+    Optional<User> findByEmail(String email);
+    Optional<User> findByEmailIn(String email);
+
+
 
 }

@@ -5,10 +5,15 @@ import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
 @Introspected
 @Serdeable
-public class UserDTO {
+public class UserCreateDto {
+
     private String username;
 
     private String password;
@@ -18,7 +23,7 @@ public class UserDTO {
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
-    public UserDTO(String username, String password, String email, String phoneNumber,UserType userType) {
+    public UserCreateDto(String username, String password, String email, String phoneNumber, UserType userType) {
         this.username = username;
         this.password = password;
         this.email = email;

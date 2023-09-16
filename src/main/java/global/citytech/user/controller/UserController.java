@@ -1,22 +1,37 @@
 package global.citytech.user.controller;
 
 
-import global.citytech.user.dto.UserDTO;
-import global.citytech.user.dto.UserLoginDTO;
+import global.citytech.user.converter.UserCreateDtoToUser;
+import global.citytech.user.dto.UserCreateDto;
+import global.citytech.user.dto.UserLoginDto;
 import global.citytech.user.model.User;
-import global.citytech.user.service.impl.UserServiceImp;
+import global.citytech.user.service.create.UserCreateService;
+import global.citytech.user.service.listusers.UserListService;
+import global.citytech.user.service.login.UserLoginService;
+import global.citytech.user.service.verifyemail.EmailVerificationService;
+import global.citytech.user.service.verifyemail.EmailVerificationRequest;
+import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 import jakarta.inject.Inject;
 
+import java.util.List;
 
 
 @Controller("/user")
 public class UserController {
     @Inject
-    private  UserServiceImp userUseCase;
-    public UserController(UserServiceImp userUseCase) {
+    private UserLoginService userLoginService;
+    @Inject
+    private UserCreateService userCreateService;
 
-        this.userUseCase = userUseCase;
+    @Inject
+    UserListService userListService;
+    @Inject
+    EmailVerificationService emailVerificationService;
+
+    public UserController(UserLoginService userLoginService, UserCreateService userCreateService) {
+        this.userLoginService = userLoginService;
+        this.userCreateService = userCreateService;
     }
 
     @Get("/")
@@ -25,49 +40,25 @@ public class UserController {
     }
 
     @Post("/create")
-    public String createUser(@Body UserDTO userDTO){
-        return userUseCase.createUserAccount(userDTO);
+    public String createUser(@Body UserCreateDto userCreateDTO) {
+        User user = UserCreateDtoToUser.toUser(userCreateDTO);
+        return this.userCreateService.createUserAccount(user);
     }
 
-    @Get("/read/{id}")
-    public User readUser(@PathVariable Long id){
-       return userUseCase.getUser(id);
-    }
 
     @Post("/login")
-    public String loginUser(@Body UserLoginDTO userLoginDTO){
-       return userUseCase.loginUser(userLoginDTO);
+    public String loginUser(@Body UserLoginDto userLoginDTO) {
+        return this.userLoginService.loginUserAccount(userLoginDTO);
     }
 
+    @Post("/verifyEmail/{id}")
+    public String verifyUserEmail(@Body EmailVerificationRequest emailVerificationRequest , @PathVariable Long id){
+        return emailVerificationService.verifyEmail(emailVerificationRequest,id);
+    }
 
-//    @Get("/read")
-//    public Iterable<User> readUsers() {
-//        if (this.userRepository.findAll().isEmpty()) {
-//            return ;
-//        }
-//        else {
-//            return this.userRepository.findAll();
-//        }
-//    }
-
-//    @Post("/update")
-//    public String updateUser(@Body User user) {
-//        return "update";
-//    }
-
-//    @Post("/Delete")
-//    public String deleteUser(@Body User user){
-//        Long id = user.getUserId();
-//        Optional<User> userEntity = this.userRepository.findById(id);
-//        if(userEntity.isPresent()) {
-//            this.userRepository.deleteById(id);
-//            return user.toString() + " Deleted Successfully.";
-//        }
-//        else{
-//            return "Cannot find given user.";
-//        }
-//    }
-
-
+    @Get("/listUser")
+    public String listUsers(){
+        return userListService.listUsers().toString();
+    }
 }
 
