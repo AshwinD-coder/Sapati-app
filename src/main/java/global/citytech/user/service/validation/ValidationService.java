@@ -42,7 +42,7 @@ public class ValidationService {
 
     public void checkEmailExistence(User user) {
         Optional<User> existingUser = this.userRepository.findByEmail(user.getEmail());
-        if (existingUser.isPresent() && existingUser.get().getVerifyStatus()) {
+        if (existingUser.isPresent()) {
             throw new IllegalArgumentException("User with this email already exists!");
         }
     }
