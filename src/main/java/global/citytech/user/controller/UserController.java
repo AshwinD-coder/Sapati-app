@@ -10,11 +10,8 @@ import global.citytech.user.service.listusers.UserListService;
 import global.citytech.user.service.login.UserLoginService;
 import global.citytech.user.service.verifyemail.EmailVerificationService;
 import global.citytech.user.service.verifyemail.EmailVerificationRequest;
-import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 import jakarta.inject.Inject;
-
-import java.util.List;
 
 
 @Controller("/user")
@@ -52,12 +49,12 @@ public class UserController {
     }
 
     @Post("/verifyEmail/{id}")
-    public String verifyUserEmail(@Body EmailVerificationRequest emailVerificationRequest , @PathVariable Long id){
-        return emailVerificationService.verifyEmail(emailVerificationRequest,id);
+    public String verifyUserEmail(@Body EmailVerificationRequest emailVerificationRequest, @PathVariable Long id) {
+        return emailVerificationService.verifyEmail(emailVerificationRequest, id);
     }
 
     @Get("/listUser")
-    public String listUsers(){
+    public String listUsers() {
         return userListService.listUsers().toString();
     }
 }
