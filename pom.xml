@@ -102,16 +102,33 @@
       <artifactId>jbcrypt</artifactId>
       <version>0.4</version>
     </dependency>
-     <dependency>
-          <groupId>io.micronaut.reactor</groupId>
-          <artifactId>micronaut-reactor</artifactId>
-          <scope>compile</scope>
-        </dependency>
-        <dependency>
-          <groupId>io.micronaut.security</groupId>
-          <artifactId>micronaut-security-jwt</artifactId>
-          <scope>compile</scope>
-        </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <version>6.1.7.Final</version> <!-- Use the appropriate version -->
+    </dependency>
+    <dependency>
+      <groupId>io.micronaut.security</groupId>
+      <artifactId>micronaut-security-jwt</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-api</artifactId>
+      <version>0.11.5</version>
+    </dependency>
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-impl</artifactId>
+      <version>0.11.5</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if Gson is preferred -->
+      <version>0.11.5</version>
+      <scope>runtime</scope>
+    </dependency>
 
 
 

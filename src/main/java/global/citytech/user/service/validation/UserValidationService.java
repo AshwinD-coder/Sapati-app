@@ -7,13 +7,13 @@ import jakarta.inject.Inject;
 
 import java.util.Optional;
 
-public class ValidationService {
+public class UserValidationService {
     @Inject
     private UserRepository userRepository;
 
     public void validateUsername(User user) {
         if (this.userRepository.findByUsername(user.getUsername()).isPresent()) {
-            throw new IllegalArgumentException("User already exists");
+            throw new IllegalArgumentException("Username already taken!");
         }
         if (user.getUsername().isEmpty() || user.getUsername().isBlank()) {
             throw new IllegalArgumentException("Username cannot be empty or blank!");
@@ -47,12 +47,20 @@ public class ValidationService {
         }
     }
 
-    public void validate(User user) {
+    public void checkVerifyStatus(User user){
+        if(!user.getVerifyStatus())
+        {
+            throw  new IllegalArgumentException("User not verified!Please verify through the email address!");
+        }
+
+    }
+
+    public void validateCreateUser(User user) {
         validateUsername(user);
         validatePassword(user);
         checkEmailExistence(user);
         checkAdminExistence(user);
-
     }
+
 
 }

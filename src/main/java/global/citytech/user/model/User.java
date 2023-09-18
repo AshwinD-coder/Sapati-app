@@ -35,7 +35,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserType userType;
     @DateCreated
-    private Date createdAt;
+    private Timestamp createdAt;
 //
     @Column(name = "is_verified")
     private Boolean verifyStatus;
@@ -45,7 +45,7 @@ public class User {
 //    private String accountStatus;
 //    private String verifiedBy;
 
-    public User(Long userId, String username, String password, String email, String phoneNumber, UserType userType,Date createdAt, Boolean verifyStatus) {
+    public User(Long userId, String username, String password, String email, String phoneNumber, UserType userType,Timestamp createdAt, Boolean verifyStatus) {
         this.userId = userId;
         this.username = username;
         this.password = password;
@@ -111,11 +111,11 @@ public class User {
         this.userType = userType;
     }
 
-    public Date getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 
