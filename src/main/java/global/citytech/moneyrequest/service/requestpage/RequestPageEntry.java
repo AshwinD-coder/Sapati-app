@@ -9,7 +9,7 @@ import io.micronaut.serde.annotation.Serdeable;
 public class RequestPageEntry {
     private String username;
 
-    public RequestPageEntry(String username, RequestStatus requestStatus) {
+    public RequestPageEntry(String username) {
         this.username = username;
     }
 

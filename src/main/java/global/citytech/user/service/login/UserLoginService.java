@@ -1,42 +1,54 @@
 package global.citytech.user.service.login;
 
+import global.citytech.platform.CustomResponseHandler;
 import global.citytech.user.service.adapter.dto.UserLoginDto;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
 import global.citytech.user.security.JwtGenerator;
-import global.citytech.user.service.validation.UserValidationService;
 import jakarta.inject.Inject;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class UserLoginService {
     @Inject
     private UserRepository userRepository;
 
-    private final JwtGenerator jwtGenerator = new JwtGenerator();
-
-    @Inject
-    UserValidationService userValidationService;
-
-    public UserLoginService(UserRepository userRepository, UserValidationService userValidationService) {
+    public UserLoginService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.userValidationService = userValidationService;
     }
 
-    public String loginUserAccount(UserLoginDto userLoginDTO) {
-        Optional<User> user = this.userRepository.findByUsername(userLoginDTO.getUsername());
+    public void checkVerifyStatus(User user) {
+        if (!user.getVerifyStatus()) {
+            throw new IllegalArgumentException("User not verified!Please verify through the email address!");
+        }
+    }
+
+    public String authenticateUser(UserLoginDto userLoginDto ){
+        Optional<User> user = this.userRepository.findByUsername(userLoginDto.getUsername());
         if (user.isPresent()) {
-            boolean isPasswordValid = BCrypt.checkpw(userLoginDTO.getPassword(), user.get().getPassword());
+            boolean isPasswordValid = BCrypt.checkpw(userLoginDto.getPassword(), user.get().getPassword());
             if (isPasswordValid) {
-                userValidationService.checkVerifyStatus(user.get());
-                return jwtGenerator.generateToken(user.get().getUsername(), user.get().getUserType());
+                checkVerifyStatus(user.get());
+                return JwtGenerator.generateToken(user.get().getUsername(),user.get().getUserType());
             } else {
-                return "Invalid Password!";
+                throw new IllegalArgumentException("Invalid Password!");
             }
         } else {
-            return "Username not found!";
+            throw new IllegalArgumentException("User doesn't exist!");
         }
+
+    }
+    public CustomResponseHandler<?> loginUserAccount(UserLoginDto userLoginDTO) {
+        String token = authenticateUser(userLoginDTO);
+        Optional<User> user = this.userRepository.findByUsername(userLoginDTO.getUsername());
+        Map<String,Object> data = new HashMap<>();
+        data.put("username",userLoginDTO.getUsername());
+        data.put("accessToken",token);
+        data.put("userType",user.get().getUserType());
+        return new CustomResponseHandler<>("200","Login Successful",data);
     }
 }
 

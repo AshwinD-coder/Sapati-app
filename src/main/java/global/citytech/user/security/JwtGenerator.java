@@ -12,10 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JwtGenerator {
-    public JwtGenerator() {
-    }
 
-    public String generateToken(String username, UserType userType){
+    public static String generateToken(String username, UserType userType){
         Date issuedAt = new Date();
         Calendar calendar = Calendar.getInstance();
         Date expiresAt = new Date(calendar.getTimeInMillis()+(10*60*1000));
@@ -26,7 +24,7 @@ public class JwtGenerator {
         return token;
     }
 
-    public SecretKey getKey(){
+    public static SecretKey getKey(){
         String secret = "S3Cr3t1sTheS3cr3t+0My3nergyh1h1h1@L01";
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }

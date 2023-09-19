@@ -5,6 +5,7 @@ import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.data.annotation.AutoPopulated;
 import io.micronaut.data.annotation.DateCreated;
+import io.micronaut.data.annotation.DateUpdated;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
 
@@ -34,6 +35,7 @@ public class MoneyRequest {
     private Timestamp requestedAt;
 
     @Nullable
+    @DateUpdated
     private Timestamp requestStatusUpdatedOn;
 
 

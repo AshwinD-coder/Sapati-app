@@ -1,15 +1,17 @@
 package global.citytech.user.controller;
 
 
+import global.citytech.platform.CustomResponseHandler;
 import global.citytech.user.service.adapter.dto.UserCreateDto;
 import global.citytech.user.service.adapter.dto.UserLoginDto;
 import global.citytech.user.repository.User;
 import global.citytech.user.service.create.UserCreateService;
 import global.citytech.user.service.delete.UserDeleteRequest;
 import global.citytech.user.service.delete.UserDeleteService;
+import global.citytech.user.service.listusers.UserListResponse;
 import global.citytech.user.service.listusers.UserListService;
 import global.citytech.user.service.login.UserLoginService;
-import global.citytech.user.service.verifyemail.EmailVerificationService;
+import global.citytech.user.service.verifyemail.UserEmailVerificationService;
 import global.citytech.user.service.verifyemail.EmailVerificationRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
@@ -24,12 +26,12 @@ public class UserController {
     @Inject
     private UserCreateService userCreateService;
     @Inject
-    UserListService userListService;
+    private UserListService userListService;
 
     @Inject
-    UserDeleteService userDeleteService;
+    private UserDeleteService userDeleteService;
     @Inject
-    EmailVerificationService emailVerificationService;
+    private UserEmailVerificationService userEmailVerificationService;
 
     public UserController(UserLoginService userLoginService, UserCreateService userCreateService) {
         this.userLoginService = userLoginService;
@@ -42,24 +44,47 @@ public class UserController {
     }
 
     @Post("/create")
-    public String createUser(@Body UserCreateDto userCreateDTO) {
-        return this.userCreateService.createUserAccount(userCreateDTO);
+    public HttpResponse<?> createUser(@Body UserCreateDto userCreateDTO) {
+        try {
+            return HttpResponse.ok().body(this.userCreateService.createUserAccount(userCreateDTO));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return HttpResponse.badRequest().body(new CustomResponseHandler<>("400",e.getMessage(),null));
+        }
     }
 
 
     @Post("/login")
-    public String loginUser(@Body UserLoginDto userLoginDTO) {
-        return this.userLoginService.loginUserAccount(userLoginDTO);
+    public HttpResponse<?> loginUser(@Body UserLoginDto userLoginDTO) {
+        try {
+            return HttpResponse.ok().body(this.userLoginService.loginUserAccount(userLoginDTO));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return HttpResponse.badRequest().body(new CustomResponseHandler<>("400",e.getMessage(),null));
+        }
     }
 
     @Post("/verifyEmail")
-    public String verifyUserEmail(@Body EmailVerificationRequest emailVerificationRequest) {
-        return emailVerificationService.verifyEmail(emailVerificationRequest);
+    public HttpResponse<?> verifyUserEmail(@Body EmailVerificationRequest emailVerificationRequest) {
+        try{
+            return HttpResponse.ok().body(userEmailVerificationService.verifyEmail(emailVerificationRequest));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return HttpResponse.badRequest().body(new CustomResponseHandler<>("400",e.getMessage(),null));
+        }
     }
 
     @Get("/listUser")
-    public List<User> listUsers() {
-        return userListService.listUsers();
+    public HttpResponse<?> listUsers() {
+        try{
+            return HttpResponse.ok().body(userListService.listUsers());
+        }
+        catch (Exception e){
+            return  HttpResponse.notFound(e.getMessage());
+        }
     }
 
     @Post("/delete")

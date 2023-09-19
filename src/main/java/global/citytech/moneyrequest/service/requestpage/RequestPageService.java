@@ -3,7 +3,6 @@ package global.citytech.moneyrequest.service.requestpage;
 import global.citytech.moneyrequest.repository.MoneyRequest;
 import global.citytech.moneyrequest.repository.RequestStatus;
 import global.citytech.moneyrequest.repository.MoneyRequestRepository;
-import io.micronaut.core.annotation.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
@@ -12,7 +11,6 @@ import java.util.List;
 
 public class RequestPageService {
     @Inject
-    @Nullable
     private MoneyRequestRepository moneyRequestRepository;
 
     public RequestPageService(MoneyRequestRepository moneyRequestRepository) {

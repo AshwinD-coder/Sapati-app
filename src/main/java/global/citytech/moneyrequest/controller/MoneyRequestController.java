@@ -1,9 +1,12 @@
 package global.citytech.moneyrequest.controller;
 
+import global.citytech.moneyrequest.service.acceptreject.AcceptRejectRequest;
+import global.citytech.moneyrequest.service.acceptreject.AcceptRejectService;
 import global.citytech.moneyrequest.service.adapter.dto.MoneyRequestDto;
 import global.citytech.moneyrequest.service.moneyrequest.MoneyRequestService;
 import global.citytech.moneyrequest.service.requestpage.RequestPageEntry;
 import global.citytech.moneyrequest.service.requestpage.RequestPageService;
+import global.citytech.platform.CustomResponseHandler;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Body;
@@ -22,14 +25,23 @@ public class MoneyRequestController {
     @Inject
     private RequestPageService requestPageService;
 
+    @Inject
+    private AcceptRejectService acceptRejectService;
+
     @Get("/")
     public String index(){
         return "Money Request Page!";
     }
 
     @Post("/borrow")
-    public  String borrowMoney(@Body MoneyRequestDto moneyRequestDto) throws ParseException {
-        return moneyRequestService.requestMoney(moneyRequestDto);
+    public  HttpResponse<?> borrowMoney(@Body MoneyRequestDto moneyRequestDto) throws ParseException {
+        try{
+            return HttpResponse.ok().body(moneyRequestService.requestMoney(moneyRequestDto));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return HttpResponse.badRequest().body(new CustomResponseHandler<>("400",e.getMessage(),null));
+        }
     }
 
     @Post("/pending")
@@ -48,4 +60,25 @@ public class MoneyRequestController {
     public HttpResponse<String> viewExpiredPage(@Body RequestPageEntry requestPageEntry){
         return  HttpResponse.status(200,"Found").body(requestPageService.viewExpiredPage(requestPageEntry).toString()).contentType(MediaType.APPLICATION_JSON_TYPE);
     }
+
+    @Post("/accept")
+    public HttpResponse<?> acceptRequest(@Body AcceptRejectRequest acceptRejectRequest) {
+        try {
+            return HttpResponse.ok().body(acceptRejectService.acceptRequest(acceptRejectRequest));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return HttpResponse.badRequest().body(new CustomResponseHandler<>("400", e.getMessage(), null));
+        }
+    }
+    @Post("/reject")
+    public HttpResponse<?> rejectRequest(@Body AcceptRejectRequest acceptRejectRequest){
+        try{
+            return HttpResponse.ok().body(acceptRejectService.rejectRequest(acceptRejectRequest));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return HttpResponse.badRequest().body(new CustomResponseHandler<>("400",e.getMessage(),null));
+        }
+    }
+
 }
