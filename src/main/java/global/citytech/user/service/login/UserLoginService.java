@@ -1,7 +1,7 @@
 package global.citytech.user.service.login;
 
-import global.citytech.user.dto.UserLoginDto;
-import global.citytech.user.model.User;
+import global.citytech.user.service.adapter.dto.UserLoginDto;
+import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
 import global.citytech.user.security.JwtGenerator;
 import global.citytech.user.service.validation.UserValidationService;
@@ -14,7 +14,7 @@ public class UserLoginService {
     @Inject
     private UserRepository userRepository;
 
-   private final JwtGenerator jwtGenerator = new JwtGenerator();
+    private final JwtGenerator jwtGenerator = new JwtGenerator();
 
     @Inject
     UserValidationService userValidationService;
@@ -27,12 +27,14 @@ public class UserLoginService {
     public String loginUserAccount(UserLoginDto userLoginDTO) {
         Optional<User> user = this.userRepository.findByUsername(userLoginDTO.getUsername());
         if (user.isPresent()) {
+            boolean isPasswordValid = BCrypt.checkpw(userLoginDTO.getPassword(), user.get().getPassword());
+            if (isPasswordValid) {
                 userValidationService.checkVerifyStatus(user.get());
-                boolean isPasswordValid = BCrypt.checkpw(userLoginDTO.getPassword(), user.get().getPassword());
-                if (isPasswordValid) return jwtGenerator.generateToken(user.get().getUsername(),user.get().getUserType());
-                else return "Invalid Password!";
+                return jwtGenerator.generateToken(user.get().getUsername(), user.get().getUserType());
+            } else {
+                return "Invalid Password!";
             }
-        else {
+        } else {
             return "Username not found!";
         }
     }

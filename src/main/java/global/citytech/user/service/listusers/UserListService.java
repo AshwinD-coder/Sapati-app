@@ -1,6 +1,6 @@
 package global.citytech.user.service.listusers;
 
-import global.citytech.user.model.User;
+import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
 import jakarta.inject.Inject;
 

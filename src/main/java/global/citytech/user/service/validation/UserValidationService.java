@@ -1,7 +1,7 @@
 package global.citytech.user.service.validation;
 
-import global.citytech.user.model.User;
-import global.citytech.user.model.UserType;
+import global.citytech.user.repository.User;
+import global.citytech.user.repository.UserType;
 import global.citytech.user.repository.UserRepository;
 import jakarta.inject.Inject;
 
@@ -23,7 +23,7 @@ public class UserValidationService {
     public void checkAdminExistence(User user) {
         Optional<User> userType = this.userRepository.findByUserType(user.getUserType());
         if (userType.isPresent()) {
-            if (userType.get().getUserType().compareTo(UserType.Admin) == 0) {
+            if (userType.get().getUserType().compareTo(UserType.ADMIN) == 0) {
                 throw new IllegalArgumentException("Admin already exists");
             }
         }

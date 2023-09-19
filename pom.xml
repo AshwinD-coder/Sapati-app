@@ -107,10 +107,10 @@
       <artifactId>hibernate-core</artifactId>
       <version>6.1.7.Final</version> <!-- Use the appropriate version -->
     </dependency>
-    <dependency>
-      <groupId>io.micronaut.security</groupId>
-      <artifactId>micronaut-security-jwt</artifactId>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>io.micronaut.security</groupId>-->
+<!--      <artifactId>micronaut-security-jwt</artifactId>-->
+<!--    </dependency>-->
 
     <dependency>
       <groupId>io.jsonwebtoken</groupId>

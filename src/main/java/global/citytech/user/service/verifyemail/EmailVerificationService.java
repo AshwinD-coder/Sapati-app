@@ -1,12 +1,9 @@
 package global.citytech.user.service.verifyemail;
 
-import global.citytech.user.model.User;
+import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
-import io.micronaut.http.HttpResponse;
-import io.micronaut.security.annotation.Secured;
 import jakarta.inject.Inject;
 
-import java.util.List;
 import java.util.Optional;
 
 public class EmailVerificationService {

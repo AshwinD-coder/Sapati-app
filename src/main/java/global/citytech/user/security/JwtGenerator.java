@@ -1,6 +1,6 @@
 package global.citytech.user.security;
 
-import global.citytech.user.model.UserType;
+import global.citytech.user.repository.UserType;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 

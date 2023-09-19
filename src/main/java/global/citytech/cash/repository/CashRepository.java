@@ -1,5 +1,4 @@
-package global.citytech.user.repository;
-
+package global.citytech.cash.repository;
 
 import io.micronaut.data.annotation.Repository;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
@@ -10,8 +9,7 @@ import java.util.Optional;
 
 @Repository
 @JdbcRepository(dialect = Dialect.POSTGRES)
-public interface UserRepository extends CrudRepository<User, Long> {
-    Optional<User> findByUsername(String username);
-    Optional<User> findByUserType(UserType userType);
-    Optional<User> findByEmail(String email);
+public interface CashRepository extends CrudRepository<Cash,Long> {
+
+    Optional<Cash> findByUsername(String username);
 }
