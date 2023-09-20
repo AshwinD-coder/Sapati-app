@@ -1,5 +1,6 @@
 package global.citytech.cash.repository;
 
+import global.citytech.platform.common.enums.UserType;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
@@ -17,14 +18,21 @@ public class Cash {
 
     private Integer amount;
 
-    public Cash(Long id, String username, Integer amount) {
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
+
+    public Cash(Long id, String username, Integer amount, UserType userType) {
         this.id = id;
         this.username = username;
         this.amount = amount;
+        this.userType = userType;
     }
 
     public Cash(){
 
+    }
+
+    public Cash(String username, int i) {
     }
 
     public Long getId() {
@@ -49,5 +57,13 @@ public class Cash {
 
     public void setAmount(Integer amount) {
         this.amount = amount;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 }

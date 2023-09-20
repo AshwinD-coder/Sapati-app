@@ -2,7 +2,7 @@ package global.citytech.user.service.adapter.converter;
 
 import global.citytech.user.service.adapter.dto.UserCreateDto;
 import global.citytech.user.repository.User;
-import global.citytech.user.repository.UserType;
+import global.citytech.platform.common.enums.UserType;
 
 public class UserCreateDtoToUser {
     public static boolean setVerifyStatus(UserCreateDto userCreateDto) {

@@ -1,10 +1,8 @@
 package global.citytech.user.service.listusers;
 
-import global.citytech.user.repository.UserType;
+import global.citytech.platform.common.enums.UserType;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
-
-import java.sql.Timestamp;
 
 @Introspected
 @Serdeable
@@ -16,12 +14,12 @@ public class UserListResponse {
     private String phoneNumber;
     private UserType userType;
 
-    private Timestamp createdAt;
+    private String createdAt;
 
 
     private Boolean verifyStatus;
 
-    public UserListResponse(Long id, String username, String email, String phoneNumber, UserType userType, Timestamp createdAt, Boolean verifyStatus) {
+    public UserListResponse(Long id, String username, String email, String phoneNumber, UserType userType, String createdAt, Boolean verifyStatus) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -75,11 +73,11 @@ public class UserListResponse {
         this.userType = userType;
     }
 
-    public Timestamp getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 

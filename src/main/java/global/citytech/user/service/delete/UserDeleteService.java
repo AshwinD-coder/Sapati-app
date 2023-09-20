@@ -1,8 +1,10 @@
 package global.citytech.user.service.delete;
 
+import global.citytech.cash.repository.Cash;
+import global.citytech.cash.repository.CashRepository;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
-import io.micronaut.http.HttpResponse;
+import global.citytech.user.service.adapter.dto.UserDeleteDto;
 import jakarta.inject.Inject;
 
 import java.util.Optional;
@@ -11,17 +13,21 @@ public class UserDeleteService {
     @Inject
     private UserRepository userRepository;
 
-    public UserDeleteService(UserRepository userRepository) {
+    @Inject
+    private CashRepository cashRepository;
+
+    public UserDeleteService(UserRepository userRepository, CashRepository cashRepository) {
         this.userRepository = userRepository;
+        this.cashRepository = cashRepository;
     }
 
-    public HttpResponse<String> deleteUser(UserDeleteRequest userDeleteRequest){
-        Optional<User> user = this.userRepository.findById(userDeleteRequest.getId());
-        if(user.isPresent()){
-        this.userRepository.delete(user.get());
-        return HttpResponse.status(0,"SUCCESS").body("Deleted User!");
-        }
-        else return HttpResponse.notFound("User not found!");
+    public void deleteUser(UserDeleteDto userDeleteDto) {
+        Optional<User> user = this.userRepository.findById(userDeleteDto.getId());
+        if (user.isPresent()) {
+            Optional<Cash> cash = this.cashRepository.findByUsername(user.get().getUsername());
+            this.userRepository.delete(user.get());
+            this.cashRepository.delete(cash.get());
+        } else throw new IllegalArgumentException("No user found!");
 
     }
 }

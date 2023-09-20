@@ -1,7 +1,8 @@
 package global.citytech.cash.controller;
 
-import global.citytech.cash.service.adapter.dto.CashDto;
+import global.citytech.cash.service.adapter.dto.CashDepositDto;
 import global.citytech.cash.service.deposit.CashDepositService;
+import global.citytech.platform.common.response.CustomResponseHandler;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
@@ -14,9 +15,14 @@ public class CashController {
     CashDepositService cashDepositService;
 
     @Post("/deposit")
-    public HttpResponse<String> depositAmount(@Body CashDto cashDto) {
-        return HttpResponse.status(200, "Deposited").body(cashDepositService.depositAmount(cashDto));
-
+    public HttpResponse<CustomResponseHandler<CashDepositDto>> depositAmount(@Body CashDepositDto cashDepositDto) {
+        try{
+            return HttpResponse.ok().body(cashDepositService.depositAmount(cashDepositDto));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return HttpResponse.badRequest().body(new CustomResponseHandler<>("0",e.getMessage(),null));
+        }
 
     }
 }

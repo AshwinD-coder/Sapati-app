@@ -1,6 +1,7 @@
 package global.citytech.user.repository;
 
 
+import global.citytech.platform.common.enums.UserType;
 import io.micronaut.data.annotation.Repository;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
 import io.micronaut.data.model.query.builder.sql.Dialect;

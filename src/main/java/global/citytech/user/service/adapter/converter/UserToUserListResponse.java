@@ -18,7 +18,7 @@ public class UserToUserListResponse {
             userListResponse.setEmail(user.getEmail());
             userListResponse.setPhoneNumber(user.getPhoneNumber());
             userListResponse.setUserType(user.getUserType());
-            userListResponse.setCreatedAt(user.getCreatedAt());
+            userListResponse.setCreatedAt(user.getCreatedAt().toString());
             userListResponse.setVerifyStatus(user.getVerifyStatus());
             userListResponses.add(userListResponse);
         }

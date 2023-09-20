@@ -1,10 +1,8 @@
 package global.citytech.user.service.create;
 
-import global.citytech.user.repository.UserType;
-import io.micronaut.core.annotation.Introspected;
+import global.citytech.platform.common.enums.UserType;
 import io.micronaut.serde.annotation.Serdeable;
 
-@Introspected
 @Serdeable
 public class UserCreateResponse {
     private String username;
@@ -20,6 +18,9 @@ public class UserCreateResponse {
         this.userType = userType;
         this.verifyStatus = verifyStatus;
 
+    }
+
+    public UserCreateResponse() {
     }
 
     public String getUsername() {

@@ -1,5 +1,6 @@
 package global.citytech.user.repository;
 
+import global.citytech.platform.common.enums.UserType;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.data.annotation.DateCreated;
 import io.micronaut.serde.annotation.Serdeable;
