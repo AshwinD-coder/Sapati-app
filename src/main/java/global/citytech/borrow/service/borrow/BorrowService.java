@@ -3,7 +3,10 @@ package global.citytech.borrow.service.borrow;
 import global.citytech.borrow.repository.Borrow;
 import global.citytech.borrow.repository.BorrowRepository;
 import global.citytech.borrow.service.adapter.converter.BorrowDtoToBorrow;
+import global.citytech.borrow.service.adapter.converter.BorrowToPayback;
 import global.citytech.borrow.service.adapter.dto.BorrowDto;
+import global.citytech.payback.repository.Payback;
+import global.citytech.payback.repository.PaybackRepository;
 import global.citytech.platform.common.enums.RequestStatus;
 import global.citytech.platform.common.enums.UserType;
 import global.citytech.platform.common.response.CustomResponseHandler;
@@ -19,21 +22,23 @@ import java.util.Optional;
 public class BorrowService {
     @Inject
     private BorrowRepository borrowRepository;
-
     @Inject
     private UserRepository userRepository;
 
     public BorrowService(BorrowRepository borrowRepository, UserRepository userRepository) {
-        this.userRepository = userRepository;
         this.borrowRepository = borrowRepository;
+        this.userRepository = userRepository;
     }
 
     public CustomResponseHandler<String> requestMoney(BorrowDto borrowDto) throws ParseException {
         Borrow borrow = BorrowDtoToBorrow.toBorrow(borrowDto);
         validateRequest(borrowDto);
         this.borrowRepository.save(borrow);
+
         return new CustomResponseHandler<>("0", "Money Request Complete!", null);
     }
+
+
 
 
     public void validateReturnDate(BorrowDto borrowDto) throws ParseException {
@@ -46,8 +51,13 @@ public class BorrowService {
     }
 
     public void validateAmount(BorrowDto borrowDto) {
-        if (borrowDto.getAmount() > 50000 || borrowDto.getAmount() <= 0) {
-            throw new IllegalArgumentException("Request Amount Limit Exceeded! Limit(Nrs.1- Nrs.50000)");
+        if(borrowDto.getAmount()<0){
+            throw new IllegalArgumentException("Amount cannot be negative!");
+        } if(borrowDto.getAmount()==0){
+            throw new IllegalArgumentException("Amount cannot be zero!");
+        }
+        if (borrowDto.getAmount() > 50000 ) {
+            throw new IllegalArgumentException("Request Amount Limit Exceeded! Max Limit Nrs.50000");
         }
         if (borrowDto.getAmount().toString().isBlank() || borrowDto.getAmount().toString().isEmpty()) {
             throw new IllegalArgumentException("Request Amount cannot be empty or blank!");
