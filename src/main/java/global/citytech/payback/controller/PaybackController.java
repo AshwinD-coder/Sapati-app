@@ -1,6 +1,5 @@
 package global.citytech.payback.controller;
 
-import global.citytech.payback.repository.Payback;
 import global.citytech.payback.service.accept.PaybackAcceptRequest;
 import global.citytech.payback.service.accept.PaybackAcceptResponse;
 import global.citytech.payback.service.accept.PaybackAcceptService;
@@ -28,7 +27,7 @@ public class PaybackController {
     public String index(){
         return "Payback Page!";
     }
-    @Post("/accept")
+    @Post("/")
     public HttpResponse<CustomResponseHandler<PaybackAcceptResponse>> acceptPayback(@Body PaybackAcceptRequest paybackAcceptRequest){
         try{
             return HttpResponse.ok().body(paybackAcceptService.acceptPayback(paybackAcceptRequest));
@@ -39,10 +38,20 @@ public class PaybackController {
 
     }
 
-    @Post("/paid-page")
+    @Post("/paid")
     public HttpResponse<CustomResponseHandler<List<PaybackPageResponse>>> viewPaidPaybackPage(@Body PaybackPageRequest paybackPageRequest){
         try{
             return HttpResponse.ok().body(paybackPageService.viewPaidPaybackPage(paybackPageRequest));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return HttpResponse.badRequest().body(new CustomResponseHandler<>("0",e.getMessage(),null));
+        }
+    }
+    @Post("/unpaid")
+    public HttpResponse<CustomResponseHandler<List<PaybackPageResponse>>> viewUnpaidPaybackPage(@Body PaybackPageRequest paybackPageRequest){
+        try{
+            return HttpResponse.ok().body(paybackPageService.viewUnpaidPaybackPage(paybackPageRequest));
         }
         catch (Exception e){
             e.printStackTrace();

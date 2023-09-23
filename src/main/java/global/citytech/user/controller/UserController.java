@@ -41,7 +41,7 @@ public class UserController {
 
     @Get("/")
     public String index() {
-        return "User Page!";
+        return "User Page!!";
     }
 
     @Post("/create")
@@ -67,7 +67,7 @@ public class UserController {
         }
     }
 
-    @Post("/verifyEmail")
+    @Post("/verify")
     public HttpResponse<CustomResponseHandler<String>> verifyUserEmail(@Body UserEmailVerificationDto userEmailVerificationDto) {
         try{
             return HttpResponse.ok().body(userEmailVerificationService.verifyEmail(userEmailVerificationDto));
@@ -78,7 +78,7 @@ public class UserController {
         }
     }
 
-    @Get("/listUser")
+    @Get("/list")
     public HttpResponse<CustomResponseHandler<List<UserListResponse>>> listUsers() {
         try{
             return HttpResponse.ok().body(userListService.listUsers());

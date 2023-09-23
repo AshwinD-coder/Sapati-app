@@ -22,8 +22,16 @@ public class PaybackPageService {
         if(paidPaybackPageList.isEmpty()){
             throw new IllegalArgumentException("Paid Payback list empty!");
         }
-        List<PaybackPageResponse> paybackPageResponseList = PaybackToPaybackPageResponseList.toPaybackPageResponseList(paidPaybackPageList);
-        return new CustomResponseHandler<>("0","Payback Page Retrieved!",paybackPageResponseList);
+        List<PaybackPageResponse> paidPaybackPageResponseList = PaybackToPaybackPageResponseList.toPaybackPageResponseList(paidPaybackPageList);
+        return new CustomResponseHandler<>("0","Paid Payback Page Retrieved!",paidPaybackPageResponseList);
+    }
+    public CustomResponseHandler<List<PaybackPageResponse>> viewUnpaidPaybackPage(PaybackPageRequest paybackPageRequest){
+        List<Payback> unpaidPaybackPageList = this.paybackRepository.findByBorrowerOrLenderAndPaybackStatusIn(paybackPageRequest.getUsername(),paybackPageRequest.getUsername(), PaybackStatus.UNPAID);
+        if(unpaidPaybackPageList.isEmpty()){
+            throw new IllegalArgumentException("Unpaid Payback list empty!");
+        }
+        List<PaybackPageResponse> unpaidPaybackPageResponseList = PaybackToPaybackPageResponseList.toPaybackPageResponseList(unpaidPaybackPageList);
+        return new CustomResponseHandler<>("0","Unpaid Payback Page Retrieved!",unpaidPaybackPageResponseList);
     }
 
 }

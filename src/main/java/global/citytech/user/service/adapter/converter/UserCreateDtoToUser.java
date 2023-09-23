@@ -17,6 +17,7 @@ public class UserCreateDtoToUser {
         user.setEmail(userCreateDTO.getEmail());
         user.setUserType(userCreateDTO.getUserType());
         user.setVerifyStatus(setVerifyStatus(userCreateDTO));
+        user.setBlacklistStatus(false);
         return user;
     }
 }

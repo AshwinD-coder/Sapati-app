@@ -35,12 +35,12 @@ public class User {
     @Column(name = "is_verified")
     private Boolean verifyStatus;
 //
-//    @Column(name = "is_blacklist")
-//    private String blacklistStatus;
+    @Column(name = "is_blacklist")
+    private Boolean blacklistStatus;
 //    private String accountStatus;
 //    private String verifiedBy;
 
-    public User(Long userId, String username, String password, String email, String phoneNumber, UserType userType,Timestamp createdAt, Boolean verifyStatus) {
+    public User(Long userId, String username, String password, String email, String phoneNumber, UserType userType,Timestamp createdAt, Boolean verifyStatus,Boolean blacklistStatus ) {
         this.userId = userId;
         this.username = username;
         this.password = password;
@@ -49,7 +49,7 @@ public class User {
         this.userType = userType;
         this.createdAt = createdAt;
         this.verifyStatus = verifyStatus;
-//        this.blacklistStatus = blacklistStatus;
+        this.blacklistStatus = blacklistStatus;
 //        this.accountStatus = accountStatus;
 //        this.verifiedBy = verifiedBy;
     }
@@ -122,14 +122,14 @@ public class User {
         this.verifyStatus = verifyStatus;
     }
 //
-//    public String getBlacklistStatus() {
-//        return blacklistStatus;
-//    }
-//
-//    public void setBlacklistStatus(String blacklistStatus) {
-//        this.blacklistStatus = blacklistStatus;
-//    }
-//
+    public Boolean getBlacklistStatus() {
+        return blacklistStatus;
+    }
+
+    public void setBlacklistStatus(Boolean blacklistStatus) {
+        this.blacklistStatus = blacklistStatus;
+    }
+
 //    public String getAccountStatus() {
 //        return accountStatus;
 //    }

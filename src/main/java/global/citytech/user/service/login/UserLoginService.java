@@ -1,5 +1,6 @@
 package global.citytech.user.service.login;
 
+import global.citytech.borrow.service.expire.ExpireService;
 import global.citytech.platform.common.response.CustomResponseHandler;
 import global.citytech.user.service.adapter.converter.UserToUserLoginResponse;
 import global.citytech.user.service.adapter.dto.UserLoginDto;
@@ -14,6 +15,9 @@ import java.util.Optional;
 public class UserLoginService {
     @Inject
     private UserRepository userRepository;
+
+    @Inject
+    private ExpireService expireService;
 
     public UserLoginService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -44,6 +48,7 @@ public class UserLoginService {
         String token = authenticateUser(userLoginDTO);
         Optional<User> user = this.userRepository.findByUsername(userLoginDTO.getUsername());
         UserLoginResponse userLoginResponse = UserToUserLoginResponse.toUserLoginResponse(user.get(),token);
+        expireService.expireMoneyRequests();
         return new CustomResponseHandler<>("0","Login Successful",userLoginResponse);
     }
 }

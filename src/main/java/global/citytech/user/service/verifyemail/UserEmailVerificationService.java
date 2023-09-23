@@ -22,7 +22,7 @@ public class UserEmailVerificationService {
                 if (user.get().getVerifyStatus().equals(false)) {
                     user.get().setVerifyStatus(true);
                     this.userRepository.update(user.get());
-                    return new CustomResponseHandler<>("0","Success","Email Verified!");
+                    return new CustomResponseHandler<>("0","Success","User Verified!");
                 } else throw new IllegalArgumentException("User Already Verified!");
             } else {
                 throw new IllegalArgumentException("Cannot find user to verify!");

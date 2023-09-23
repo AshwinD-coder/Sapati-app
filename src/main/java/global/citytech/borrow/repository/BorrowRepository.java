@@ -16,4 +16,6 @@ public interface BorrowRepository extends CrudRepository<Borrow, UUID> {
     Optional<Borrow> findByBorrowerAndLenderAndRequestStatus(String borrower, String lender, RequestStatus requestStatus);
     List<Borrow> findByBorrowerOrLenderAndRequestStatusIn(String borrower, String lender, RequestStatus requestStatus);
     Optional<Borrow> findByTransactionId(UUID transactionId);
+
+    List<Borrow> findByRequestStatusIn(RequestStatus requestStatus);
 }

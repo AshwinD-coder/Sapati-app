@@ -36,7 +36,7 @@ public class BorrowController {
         return "Money Request Page!";
     }
 
-    @Post("/borrow")
+    @Post("/")
     public  HttpResponse<CustomResponseHandler<String>> borrowMoney(@Body BorrowDto borrowDto) throws ParseException {
         try{
             return HttpResponse.ok().body(borrowService.requestMoney(borrowDto));

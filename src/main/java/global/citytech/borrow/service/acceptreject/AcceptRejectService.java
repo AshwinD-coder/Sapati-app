@@ -36,6 +36,7 @@ public class AcceptRejectService {
 
     @Inject
     CashRepositoryUpdateService updateCashRepository;
+
     public AcceptRejectService(BorrowRepository borrowRepository, UserRepository userRepository, CashRepository cashRepository, PaybackRepository paybackRepository) {
         this.borrowRepository = borrowRepository;
         this.userRepository = userRepository;
@@ -44,10 +45,10 @@ public class AcceptRejectService {
     }
 
     public CustomResponseHandler<AcceptRejectResponse> acceptRequest(AcceptRejectRequest acceptRejectRequest) {
+        validateRequest(acceptRejectRequest);
         Optional<Borrow> moneyRequest = this.borrowRepository.findById(acceptRejectRequest.getTransactionId());
         Optional<Cash> lenderAccount = this.cashRepository.findByUsername(acceptRejectRequest.getLenderUsername());
         Borrow request = moneyRequest.get();
-        validateRequest(acceptRejectRequest);
         checkAvailableCash(lenderAccount.get(), request);
         updateCashRepository.updateCashRepositoryForBorrow(acceptRejectRequest);
         request.setRequestStatus(RequestStatus.ACCEPTED);
@@ -55,7 +56,6 @@ public class AcceptRejectService {
         this.borrowRepository.update(request);
         AcceptRejectResponse acceptRejectResponse = new AcceptRejectResponse(request.getBorrower(), request.getAmount(), request.getRequestStatus());
         return new CustomResponseHandler<>("0", "Money Request Accepted!", acceptRejectResponse);
-
     }
 
     public void validateRequest(AcceptRejectRequest acceptRejectRequest) {
@@ -74,7 +74,9 @@ public class AcceptRejectService {
         if (moneyRequest.get().getRequestStatus() != RequestStatus.PENDING) {
             throw new IllegalArgumentException("Money Request already accepted, rejected or expired!");
         }
-
+        if (!moneyRequest.get().getLender().equals(acceptRejectRequest.getLenderUsername())) {
+            throw new IllegalArgumentException("This lender is not associated with that transaction Id");
+        }
     }
 
     public void checkAvailableCash(Cash cash, Borrow borrow) {
@@ -83,7 +85,6 @@ public class AcceptRejectService {
         }
     }
 
-
     private void addPayback(UUID transactionId) {
         Optional<Borrow> borrow = this.borrowRepository.findById(transactionId);
         Payback payback = BorrowToPayback.toPayback(borrow.get());
@@ -91,20 +92,13 @@ public class AcceptRejectService {
     }
 
     public CustomResponseHandler<AcceptRejectResponse> rejectRequest(AcceptRejectRequest acceptRejectRequest) {
+        validateRequest(acceptRejectRequest);
         Optional<Borrow> moneyRequest = this.borrowRepository.findById(acceptRejectRequest.getTransactionId());
         Borrow request = moneyRequest.get();
-        validateRequest(acceptRejectRequest);
-        removePayback(acceptRejectRequest.getTransactionId());
         request.setRequestStatus(RequestStatus.REJECTED);
         this.borrowRepository.update(request);
         AcceptRejectResponse acceptRejectResponse = new AcceptRejectResponse(request.getBorrower(), request.getAmount(), request.getRequestStatus());
         return new CustomResponseHandler<>("0", "Money Request Rejected!", acceptRejectResponse);
-
-    }
-
-    private void removePayback(UUID transactionId) {
-        Optional<Payback> payback = this.paybackRepository.findById(transactionId);
-        this.paybackRepository.delete(payback.get());
     }
 
 
