@@ -1,0 +1,469 @@
+{
+	"info": {
+		"_postman_id": "3f644d9f-5d07-4a0c-993d-b6236c1e1f78",
+		"name": "Ashwin Dhougoda",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29426982"
+	},
+	"item": [
+		{
+			"name": "Borrow",
+			"item": [
+				{
+					"name": "Index page",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Request Money",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"borrower\":\"Magante\",\r\n    \"lender\":\"DBKC\",\r\n    \"amount\":5000,\r\n    \"remarks\": \"Dinner Bill\",\r\n    \"returnDate\":\"2023-09-25\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/money-request",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"money-request"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View Request Page (PENDING)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"DBKC\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/money-request/pending",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"money-request",
+								"pending"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View Request Page (ACCEPTED)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"illusion\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/money-request/accepted",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"money-request",
+								"accepted"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View Request Page (REJECTED)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"Ashwin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/borrow/accepted",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"borrow",
+								"accepted"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View Request Page (EXPIRED)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"Ashwin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/borrow/expired",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"borrow",
+								"expired"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accept Money Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"transactionId\":\"1aa68f55-fe74-4d18-a4c7-3454a562face\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/money-request/accept",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"money-request",
+								"accept"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reject Money Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"transactionId\":\"1aa68f55-fe74-4d18-a4c7-3454a562face\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/money-request/reject",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"money-request",
+								"reject"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cash",
+			"item": [
+				{
+					"name": "Deposit Cash",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payback",
+			"item": [
+				{
+					"name": "Index Page",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Accept Payback",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"transactionId\":\"40926789-af54-4185-9822-66d13de165b3\",\r\n    \"borrower\":\"Magante\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/payback/accept",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"payback",
+								"accept"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Payback Page (PAID)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"DBKC\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/payback/paid",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"payback",
+								"paid"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Payback Page (UNPAID)",
+					"request": {
+						"method": "POST",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Index Page",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Create User(1)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\":3,\r\n   \"username\":\"Suraj@123\",\r\n   \"password\":\"test\",\r\n   \"email\":\"suraj@gmail.com\"\r\n        ,\r\n        \"phoneNumber\":\"123128\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/user/create",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User(2)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\":3,\r\n   \"username\":\"Suraj@123\",\r\n   \"password\":\"test\",\r\n   \"email\":\"suraj@gmail.com\"\r\n        ,\r\n        \"phoneNumber\":\"123128\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/user/create",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"ashwin\",\r\n    \"password\":\"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/user/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Email",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"kaka@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/user/verifyEmail",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"verifyEmail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Users",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/user/delete",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
