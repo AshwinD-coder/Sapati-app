@@ -35,7 +35,7 @@ public class AcceptRejectService {
     PaybackRepository paybackRepository;
 
     @Inject
-    CashRepositoryUpdateService updateCashRepository;
+    CashRepositoryUpdateService cashRepositoryUpdateService;
 
     public AcceptRejectService(BorrowRepository borrowRepository, UserRepository userRepository, CashRepository cashRepository, PaybackRepository paybackRepository) {
         this.borrowRepository = borrowRepository;
@@ -50,7 +50,7 @@ public class AcceptRejectService {
         Optional<Cash> lenderAccount = this.cashRepository.findByUsername(acceptRejectRequest.getLenderUsername());
         Borrow request = moneyRequest.get();
         checkAvailableCash(lenderAccount.get(), request);
-        updateCashRepository.updateCashRepositoryForBorrow(acceptRejectRequest);
+        cashRepositoryUpdateService.updateCashRepositoryForBorrow(acceptRejectRequest);
         request.setRequestStatus(RequestStatus.ACCEPTED);
         addPayback(acceptRejectRequest.getTransactionId());
         this.borrowRepository.update(request);
@@ -61,7 +61,6 @@ public class AcceptRejectService {
     public void validateRequest(AcceptRejectRequest acceptRejectRequest) {
         Optional<Borrow> moneyRequest = this.borrowRepository.findById(acceptRejectRequest.getTransactionId());
         Optional<User> user = this.userRepository.findByUsername(acceptRejectRequest.getLenderUsername());
-
         if (moneyRequest.isEmpty()) {
             throw new IllegalArgumentException("Invalid money request id!");
         }
@@ -70,6 +69,13 @@ public class AcceptRejectService {
         }
         if (user.get().getUserType() != UserType.LENDER) {
             throw new IllegalArgumentException("Only lender can accept or reject request!");
+        }
+        if(user.get().getActiveStatus().equals(false)){
+            throw new IllegalArgumentException("Lender is not active!");
+        }
+        Optional<User> borrower = this.userRepository.findByUsername(moneyRequest.get().getBorrower());
+        if(borrower.get().getActiveStatus().equals(false)){
+            throw new IllegalArgumentException("Borrower is not active!");
         }
         if (moneyRequest.get().getRequestStatus() != RequestStatus.PENDING) {
             throw new IllegalArgumentException("Money Request already accepted, rejected or expired!");

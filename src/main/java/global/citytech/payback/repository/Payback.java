@@ -3,10 +3,12 @@ package global.citytech.payback.repository;
 
 import global.citytech.platform.common.enums.PaybackStatus;
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.Nullable;
+import io.micronaut.data.annotation.DateUpdated;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
 
-import java.text.SimpleDateFormat;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.UUID;
 
@@ -25,13 +27,17 @@ public class Payback {
     private PaybackStatus paybackStatus;
     private Date paybackDeadline;
 
-    public Payback(UUID id, String borrower, String lender, Integer paybackAmount, PaybackStatus paybackStatus, Date paybackDeadline) {
+    @Nullable
+    private Timestamp paybackCompletedOn;
+
+    public Payback(UUID id, String borrower, String lender, Integer paybackAmount, PaybackStatus paybackStatus, Date paybackDeadline, @Nullable Timestamp paybackCompletedOn) {
         this.id = id;
         this.borrower = borrower;
         this.lender = lender;
         this.paybackAmount = paybackAmount;
         this.paybackStatus = paybackStatus;
         this.paybackDeadline = paybackDeadline;
+        this.paybackCompletedOn = paybackCompletedOn;
     }
 
     public Payback() {
@@ -84,5 +90,15 @@ public class Payback {
 
     public void setPaybackDeadline(Date paybackDeadline) {
         this.paybackDeadline = paybackDeadline;
+    }
+
+    @Nullable
+    public Timestamp getPaybackCompletedOn() {
+        return paybackCompletedOn;
+    }
+
+    @Nullable
+    public void setPaybackCompletedOn(Timestamp paybackCompletedOn) {
+        this.paybackCompletedOn = paybackCompletedOn;
     }
 }

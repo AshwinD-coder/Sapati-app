@@ -9,10 +9,12 @@ import java.util.UUID;
 public class PaybackAcceptResponse {
     private UUID transactionId;
     private PaybackStatus paybackStatus;
+    private String paybackCompletedOn;
 
-    public PaybackAcceptResponse(UUID transactionId, PaybackStatus paybackStatus) {
+    public PaybackAcceptResponse(UUID transactionId, PaybackStatus paybackStatus, String paybackCompletedOn) {
         this.transactionId = transactionId;
         this.paybackStatus = paybackStatus;
+        this.paybackCompletedOn = paybackCompletedOn;
     }
 
     public PaybackAcceptResponse() {
@@ -33,5 +35,13 @@ public class PaybackAcceptResponse {
 
     public void setPaybackStatus(PaybackStatus paybackStatus) {
         this.paybackStatus = paybackStatus;
+    }
+
+    public String getPaybackCompletedOn() {
+        return paybackCompletedOn;
+    }
+
+    public void setPaybackCompletedOn(String paybackCompletedOn) {
+        this.paybackCompletedOn = paybackCompletedOn;
     }
 }

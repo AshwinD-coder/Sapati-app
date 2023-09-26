@@ -31,16 +31,17 @@ public class User {
     private UserType userType;
     @DateCreated
     private Timestamp createdAt;
-//
+
     @Column(name = "is_verified")
     private Boolean verifyStatus;
-//
+
     @Column(name = "is_blacklist")
     private Boolean blacklistStatus;
-//    private String accountStatus;
-//    private String verifiedBy;
 
-    public User(Long userId, String username, String password, String email, String phoneNumber, UserType userType,Timestamp createdAt, Boolean verifyStatus,Boolean blacklistStatus ) {
+    @Column(name = "is_active")
+    private Boolean activeStatus;
+
+    public User(Long userId, String username, String password, String email, String phoneNumber, UserType userType, Timestamp createdAt, Boolean verifyStatus, Boolean blacklistStatus, Boolean activeStatus) {
         this.userId = userId;
         this.username = username;
         this.password = password;
@@ -50,8 +51,7 @@ public class User {
         this.createdAt = createdAt;
         this.verifyStatus = verifyStatus;
         this.blacklistStatus = blacklistStatus;
-//        this.accountStatus = accountStatus;
-//        this.verifiedBy = verifiedBy;
+        this.activeStatus = activeStatus;
     }
 
     public User() {
@@ -130,21 +130,13 @@ public class User {
         this.blacklistStatus = blacklistStatus;
     }
 
-//    public String getAccountStatus() {
-//        return accountStatus;
-//    }
-//
-//    public void setAccountStatus(String accountStatus) {
-//        this.accountStatus = accountStatus;
-//    }
-//
-//    public String getVerifiedBy() {
-//        return verifiedBy;
-//    }
-//
-//    public void setVerifiedBy(String verifiedBy) {
-//        this.verifiedBy = verifiedBy;
-//    }
+    public Boolean getActiveStatus() {
+        return activeStatus;
+    }
+
+    public void setActiveStatus(Boolean activeStatus) {
+        this.activeStatus = activeStatus;
+    }
 
     @Override
     public String toString() {

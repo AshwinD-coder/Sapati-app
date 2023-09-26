@@ -20,6 +20,8 @@ public class UserToUserListResponse {
             userListResponse.setUserType(user.getUserType());
             userListResponse.setCreatedAt(user.getCreatedAt().toString());
             userListResponse.setVerifyStatus(user.getVerifyStatus());
+            userListResponse.setBlacklistStatus(user.getBlacklistStatus());
+            userListResponse.setActiveStatus(user.getActiveStatus());
             userListResponses.add(userListResponse);
         }
         return userListResponses;

@@ -1,12 +1,14 @@
 package global.citytech.user.service.login;
 
 import global.citytech.borrow.service.expire.ExpireService;
+import global.citytech.payback.service.deadline.DeadlineService;
 import global.citytech.platform.common.response.CustomResponseHandler;
-import global.citytech.user.service.adapter.converter.UserToUserLoginResponse;
-import global.citytech.user.service.adapter.dto.UserLoginDto;
+import global.citytech.platform.security.JwtGenerator;
+import global.citytech.platform.security.JwtParser;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
-import global.citytech.platform.security.JwtGenerator;
+import global.citytech.user.service.adapter.converter.UserToUserLoginResponse;
+import global.citytech.user.service.adapter.dto.UserLoginDto;
 import jakarta.inject.Inject;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -19,6 +21,9 @@ public class UserLoginService {
     @Inject
     private ExpireService expireService;
 
+    @Inject
+    private DeadlineService deadlineService;
+
     public UserLoginService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -29,13 +34,13 @@ public class UserLoginService {
         }
     }
 
-    public String authenticateUser(UserLoginDto userLoginDto ){
+    public String authenticateAndValidateUser(UserLoginDto userLoginDto) {
         Optional<User> user = this.userRepository.findByUsername(userLoginDto.getUsername());
         if (user.isPresent()) {
             boolean isPasswordValid = BCrypt.checkpw(userLoginDto.getPassword(), user.get().getPassword());
             if (isPasswordValid) {
-                checkVerifyStatus(user.get());
-                return JwtGenerator.generateToken(user.get().getUsername(),user.get().getUserType());
+                validateUserStatus(user.get());
+                return JwtGenerator.generateToken(user.get().getUsername(), user.get().getUserType());
             } else {
                 throw new IllegalArgumentException("Invalid Password!");
             }
@@ -44,12 +49,33 @@ public class UserLoginService {
         }
 
     }
+
+    private void validateUserStatus(User user) {
+        checkVerifyStatus(user);
+        checkActiveStatus(user);
+        checkBlacklistStatus(user);
+    }
+
+    private void checkBlacklistStatus(User user) {
+        if (user.getBlacklistStatus().equals(true)) {
+            throw new IllegalArgumentException("User is blacklisted!");
+        }
+    }
+
+    private void checkActiveStatus(User user) {
+        if (!user.getActiveStatus()) {
+            throw new IllegalArgumentException("User is not active!");
+        }
+    }
+
     public CustomResponseHandler<UserLoginResponse> loginUserAccount(UserLoginDto userLoginDTO) {
-        String token = authenticateUser(userLoginDTO);
+        String token = authenticateAndValidateUser(userLoginDTO);
         Optional<User> user = this.userRepository.findByUsername(userLoginDTO.getUsername());
-        UserLoginResponse userLoginResponse = UserToUserLoginResponse.toUserLoginResponse(user.get(),token);
+        UserLoginResponse userLoginResponse = UserToUserLoginResponse.toUserLoginResponse(user.get(), token);
+        JwtParser.parseToken(token);
         expireService.expireMoneyRequests();
-        return new CustomResponseHandler<>("0","Login Successful",userLoginResponse);
+        deadlineService.checkPaybackDeadline();
+        return new CustomResponseHandler<>("0", "Login Successful", userLoginResponse);
     }
 }
 

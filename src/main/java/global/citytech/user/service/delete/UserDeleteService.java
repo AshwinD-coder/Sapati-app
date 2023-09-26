@@ -13,20 +13,16 @@ public class UserDeleteService {
     @Inject
     private UserRepository userRepository;
 
-    @Inject
-    private CashRepository cashRepository;
 
-    public UserDeleteService(UserRepository userRepository, CashRepository cashRepository) {
+    public UserDeleteService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.cashRepository = cashRepository;
     }
 
     public void deleteUser(UserDeleteDto userDeleteDto) {
         Optional<User> user = this.userRepository.findById(userDeleteDto.getId());
         if (user.isPresent()) {
-            Optional<Cash> cash = this.cashRepository.findByUsername(user.get().getUsername());
-            this.userRepository.delete(user.get());
-            this.cashRepository.delete(cash.get());
+            user.get().setActiveStatus(false);
+            this.userRepository.update(user.get());
         } else throw new IllegalArgumentException("No user found!");
 
     }

@@ -63,6 +63,7 @@ public class UserCreateDto {
         return userType;
     }
 
+
     public void setUserType(UserType userType) {
         this.userType = userType;
     }

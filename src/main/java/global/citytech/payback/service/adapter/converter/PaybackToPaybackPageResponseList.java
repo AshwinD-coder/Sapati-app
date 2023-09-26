@@ -19,6 +19,9 @@ public class PaybackToPaybackPageResponseList {
             paybackPageResponse.setPaybackAmount(payback.getPaybackAmount());
             paybackPageResponse.setPaybackStatus(payback.getPaybackStatus());
             paybackPageResponse.setPaybackDeadline(payback.getPaybackDeadline().toString());
+            if(payback.getPaybackCompletedOn()!=null) {
+                paybackPageResponse.setPaybackCompletedOn(payback.getPaybackCompletedOn().toString());
+            }
             paybackPageResponseList.add(paybackPageResponse);
         }
         return paybackPageResponseList;

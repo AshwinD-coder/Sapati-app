@@ -18,6 +18,7 @@ public class UserCreateDtoToUser {
         user.setUserType(userCreateDTO.getUserType());
         user.setVerifyStatus(setVerifyStatus(userCreateDTO));
         user.setBlacklistStatus(false);
+        user.setActiveStatus(true);
         return user;
     }
 }

@@ -16,8 +16,17 @@ public class PaybackPageResponse {
     private String paybackDeadline;
     private Integer paybackAmount;
 
+    private String paybackCompletedOn;
     public PaybackPageResponse() {
 
+    }
+
+    public String getPaybackCompletedOn() {
+        return paybackCompletedOn;
+    }
+
+    public void setPaybackCompletedOn(String paybackCompletedOn) {
+        this.paybackCompletedOn = paybackCompletedOn;
     }
 
     public UUID getPaybackId() {

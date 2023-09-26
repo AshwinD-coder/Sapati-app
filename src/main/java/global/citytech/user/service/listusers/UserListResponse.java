@@ -10,16 +10,14 @@ public class UserListResponse {
     private Long id;
     private String username;
     private String email;
-
     private String phoneNumber;
     private UserType userType;
-
     private String createdAt;
-
-
     private Boolean verifyStatus;
+    private Boolean blacklistStatus;
+    private Boolean activeStatus;
 
-    public UserListResponse(Long id, String username, String email, String phoneNumber, UserType userType, String createdAt, Boolean verifyStatus) {
+    public UserListResponse(Long id, String username, String email, String phoneNumber, UserType userType, String createdAt, Boolean verifyStatus, Boolean blacklistStatus, Boolean activeStatus) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -27,6 +25,8 @@ public class UserListResponse {
         this.userType = userType;
         this.createdAt = createdAt;
         this.verifyStatus = verifyStatus;
+        this.blacklistStatus = blacklistStatus;
+        this.activeStatus = activeStatus;
     }
 
     public UserListResponse() {
@@ -87,5 +87,21 @@ public class UserListResponse {
 
     public void setVerifyStatus(Boolean verifyStatus) {
         this.verifyStatus = verifyStatus;
+    }
+
+    public Boolean getBlacklistStatus() {
+        return blacklistStatus;
+    }
+
+    public void setBlacklistStatus(Boolean blacklistStatus) {
+        this.blacklistStatus = blacklistStatus;
+    }
+
+    public Boolean getActiveStatus() {
+        return activeStatus;
+    }
+
+    public void setActiveStatus(Boolean activeStatus) {
+        this.activeStatus = activeStatus;
     }
 }

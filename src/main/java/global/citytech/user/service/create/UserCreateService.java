@@ -9,7 +9,10 @@ import global.citytech.platform.common.enums.UserType;
 import global.citytech.user.service.adapter.converter.UserCreateDtoToUser;
 import global.citytech.user.service.adapter.converter.UserToCash;
 import global.citytech.user.service.adapter.converter.UserToUserCreateResponse;
+import global.citytech.user.service.adapter.converter.UserToUserQrRequest;
 import global.citytech.user.service.adapter.dto.UserCreateDto;
+import global.citytech.user.service.qr.UserQrRequest;
+import global.citytech.user.service.qr.UserQrService;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.mindrot.jbcrypt.BCrypt;
@@ -24,13 +27,17 @@ public class UserCreateService {
     @Inject
     private CashRepository cashRepository;
 
+
+
     public CustomResponseHandler<UserCreateResponse> createUserAndCashAccount(UserCreateDto userCreateDTO) {
+        validateCreateUser(userCreateDTO);
         User user = UserCreateDtoToUser.toUser(userCreateDTO);
-        validateCreateUser(user);
         hashPassword(user);
         this.userRepository.save(user);
         createCashAccount(user);
         UserCreateResponse userCreateResponse = UserToUserCreateResponse.toUserCreateResponse(user);
+        UserQrRequest userQrRequest = UserToUserQrRequest.toUserQrRequest(user);
+        UserQrService.generateQR(userQrRequest);
         return new CustomResponseHandler<>("0", "User Created! Please verify your email to login.", userCreateResponse);
     }
 
@@ -43,14 +50,14 @@ public class UserCreateService {
     }
 
 
-    public void checkEmailExistence(User user) {
+    public void checkEmailExistence(UserCreateDto user) {
         Optional<User> existingUser = this.userRepository.findByEmail(user.getEmail());
         if (existingUser.isPresent()) {
             throw new IllegalArgumentException("User with this email already exists!");
         }
     }
 
-    public void validatePassword(User user) {
+    public void validatePassword(UserCreateDto user) {
         String password = user.getPassword();
         if (password.isBlank() || password.isEmpty()) {
             throw new IllegalArgumentException("Password cannot be empty or blank!!");
@@ -58,12 +65,15 @@ public class UserCreateService {
         if (password.length() < 8) {
             throw new IllegalArgumentException("Password must contain at least 8 characters.");
         }
+        if(password.length()>15){
+            throw new IllegalArgumentException("Password cannot be longer than 15 characters!");
+        }
         if (password.contains(" ")) {
             throw new IllegalArgumentException("Password cannot contain whitespaces!");
         }
     }
 
-    public void validateUsername(User user) {
+    public void validateUser(UserCreateDto user) {
         if (this.userRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new IllegalArgumentException("Username already taken!");
         }
@@ -73,13 +83,23 @@ public class UserCreateService {
         if (user.getUsername().contains(" ")) {
             throw new IllegalArgumentException("Username cannot contain whitespace!");
         }
+        if(user.getUsername().length()>15){
+            throw new IllegalArgumentException("Username cannot be longer than 15 characters!");
+        }
     }
 
-    public void validateCreateUser(User user) {
-        validateUsername(user);
+    public void validateCreateUser(UserCreateDto user) {
+        validateUser(user);
         validatePassword(user);
         checkEmailExistence(user);
         checkAdminExistence();
+        checkUserType(user);
+    }
+
+    private void checkUserType(UserCreateDto user) {
+        if(!user.getUserType().equals(UserType.ADMIN) && !user.getUserType().equals(UserType.BORROWER) && !user.getUserType().equals(UserType.LENDER)){
+            throw new IllegalArgumentException("User type not allowed to create!");
+        }
     }
 
     public static void hashPassword(User user) {
@@ -95,7 +115,9 @@ public class UserCreateService {
 
     public void createCashAccount(User user) {
         validateCashAccount(user);
-        this.cashRepository.save(UserToCash.toCash(user));
+        if(!user.getUserType().equals(UserType.ADMIN)) {
+            this.cashRepository.save(UserToCash.toCash(user));
+        }
     }
 
 }

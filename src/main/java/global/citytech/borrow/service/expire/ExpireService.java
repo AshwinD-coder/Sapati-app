@@ -18,11 +18,9 @@ public class ExpireService {
 
     public void expireMoneyRequests() {
         List<Borrow> borrowList = this.borrowRepository.findByRequestStatusIn(RequestStatus.PENDING);
-        for (Borrow borrow :
-                borrowList) {
+        for (Borrow borrow : borrowList) {
             int daysCrossed = getDaysCrossed(borrow);
-
-            if (daysCrossed >= 3) {
+            if (daysCrossed == 2 && borrow.getRequestStatus().equals(RequestStatus.PENDING)) {
                 borrow.setRequestStatus(RequestStatus.EXPIRED);
                 this.borrowRepository.update(borrow);
             }
@@ -32,9 +30,11 @@ public class ExpireService {
     private int getDaysCrossed(Borrow borrow) {
         Date requestDate = borrow.getRequestedAt();
         Date currentDate = new Date();
-        System.out.println("requested at: " + requestDate);
-        System.out.println("current at: " + currentDate);
-        System.out.println(currentDate.compareTo(requestDate));
-        return currentDate.compareTo(requestDate);
+        long timeInMilliseconds = currentDate.getTime() - requestDate.getTime(); // 1 Day = 86400000 milliseconds
+        if (currentDate.after(requestDate) && timeInMilliseconds >= 86400000 * 2) {
+            return 2;
+        } else {
+            return 0;
+        }
     }
 }

@@ -15,6 +15,7 @@ public class BorrowToPayback {
         payback.setPaybackAmount(borrow.getAmount());
         payback.setPaybackDeadline(borrow.getReturnDate());
         payback.setPaybackStatus(PaybackStatus.UNPAID);
+        payback.setPaybackCompletedOn(null);
         return payback;
     }
 }
