@@ -16,10 +16,10 @@ public class UserCreateDto {
     private String email;
 
     private String phoneNumber;
-    @Enumerated(EnumType.STRING)
-    private UserType userType;
 
-    public UserCreateDto(String username, String password, String email, String phoneNumber, UserType userType) {
+    private String userType;
+
+    public UserCreateDto(String username, String password, String email, String phoneNumber, String userType) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -59,12 +59,12 @@ public class UserCreateDto {
         this.phoneNumber = phoneNumber;
     }
 
-    public UserType getUserType() {
+    public String getUserType() {
         return userType;
     }
 
 
-    public void setUserType(UserType userType) {
+    public void setUserType(String userType) {
         this.userType = userType;
     }
 }

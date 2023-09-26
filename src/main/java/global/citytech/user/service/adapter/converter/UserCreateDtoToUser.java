@@ -6,7 +6,7 @@ import global.citytech.platform.common.enums.UserType;
 
 public class UserCreateDtoToUser {
     public static boolean setVerifyStatus(UserCreateDto userCreateDto) {
-        return userCreateDto.getUserType().compareTo(UserType.ADMIN) == 0;
+        return UserType.valueOf(userCreateDto.getUserType()).compareTo(UserType.ADMIN) == 0;
     }
 
     public static User toUser(UserCreateDto userCreateDTO) {
@@ -15,7 +15,7 @@ public class UserCreateDtoToUser {
         user.setPassword(userCreateDTO.getPassword());
         user.setPhoneNumber(userCreateDTO.getPhoneNumber());
         user.setEmail(userCreateDTO.getEmail());
-        user.setUserType(userCreateDTO.getUserType());
+        user.setUserType(UserType.valueOf(userCreateDTO.getUserType()));
         user.setVerifyStatus(setVerifyStatus(userCreateDTO));
         user.setBlacklistStatus(false);
         user.setActiveStatus(true);

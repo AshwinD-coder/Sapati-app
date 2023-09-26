@@ -42,9 +42,9 @@ public class UserCreateService {
     }
 
 
-    public void checkAdminExistence() {
-        Optional<User> userType = this.userRepository.findByUserType(UserType.ADMIN);
-        if (userType.isPresent()) {
+    public void checkAdminExistence(UserCreateDto user) {
+        Optional<User> userType = this.userRepository.findByUserType(UserType.valueOf(user.getUserType()));
+        if (userType.get().getUserType().equals(UserType.ADMIN)) {
             throw new IllegalArgumentException("Admin already exists");
         }
     }
@@ -91,16 +91,17 @@ public class UserCreateService {
     public void validateCreateUser(UserCreateDto user) {
         validateUser(user);
         validatePassword(user);
+        validateUserType(user);
         checkEmailExistence(user);
-        checkAdminExistence();
-        checkUserType(user);
+        checkAdminExistence(user);
     }
 
-    private void checkUserType(UserCreateDto user) {
-        if(!user.getUserType().equals(UserType.ADMIN) && !user.getUserType().equals(UserType.BORROWER) && !user.getUserType().equals(UserType.LENDER)){
+    private void validateUserType(UserCreateDto user) {
+        if(!user.getUserType().equalsIgnoreCase("borrower") && !user.getUserType().equalsIgnoreCase("admin") && !user.getUserType().equalsIgnoreCase("lender")){
             throw new IllegalArgumentException("User type not allowed to create!");
         }
     }
+
 
     public static void hashPassword(User user) {
         user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
