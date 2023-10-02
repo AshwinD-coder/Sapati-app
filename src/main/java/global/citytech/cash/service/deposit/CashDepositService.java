@@ -47,6 +47,9 @@ public class CashDepositService {
         validateCashDeposit(cashDepositDto);
         Optional<User> user = this.userRepository.findByUsername(cashDepositDto.getUsername());
         Optional<Cash> cashAccount = this.cashRepository.findByUsername(cashDepositDto.getUsername());
+        if(user.isEmpty() || cashAccount.isEmpty()){
+            throw new IllegalArgumentException("No user or cash account found!");
+        }
         Cash cash = cashAccount.get();
         cash.setAmount(cash.getAmount() + cashDepositDto.getAmount());
         cash.setUserType(user.get().getUserType());

@@ -14,16 +14,18 @@ public class BorrowPageResponse {
     private String requestFrom;
     private String requestTo;
     private Integer amount;
+    private Double interestRate;
     private String remarks;
     private String returnDate;
     private RequestStatus requestStatus;
     private String requestedAt;
 
-    public BorrowPageResponse(UUID transactionId, String requestFrom, String requestTo, Integer amount, String remarks, String returnDate, RequestStatus requestStatus, String requestedAt) {
+    public BorrowPageResponse(UUID transactionId, String requestFrom, String requestTo, Integer amount, Double interestRate, String remarks, String returnDate, RequestStatus requestStatus, String requestedAt) {
         this.transactionId = transactionId;
         this.requestFrom = requestFrom;
         this.requestTo = requestTo;
         this.amount = amount;
+        this.interestRate = interestRate;
         this.remarks = remarks;
         this.returnDate = returnDate;
         this.requestStatus = requestStatus;
@@ -62,6 +64,14 @@ public class BorrowPageResponse {
 
     public void setAmount(Integer amount) {
         this.amount = amount;
+    }
+
+    public Double getInterestRate() {
+        return interestRate;
+    }
+
+    public void setInterestRate(Double interestRate) {
+        this.interestRate = interestRate;
     }
 
     public String getRemarks() {

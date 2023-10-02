@@ -3,7 +3,6 @@ package global.citytech.payback.service.paybackpage;
 import global.citytech.platform.common.enums.PaybackStatus;
 import io.micronaut.serde.annotation.Serdeable;
 
-import java.util.Date;
 import java.util.UUID;
 
 @Serdeable
@@ -15,8 +14,11 @@ public class PaybackPageResponse {
     private PaybackStatus paybackStatus;
     private String paybackDeadline;
     private Integer paybackAmount;
+    private Double interestRate;
+    private Double totalPaybackWithInterest;
 
     private String paybackCompletedOn;
+
     public PaybackPageResponse() {
 
     }
@@ -53,6 +55,31 @@ public class PaybackPageResponse {
         this.lender = lender;
     }
 
+
+    public Integer getPaybackAmount() {
+        return paybackAmount;
+    }
+
+    public void setPaybackAmount(Integer paybackAmount) {
+        this.paybackAmount = paybackAmount;
+    }
+
+    public Double getInterestRate() {
+        return interestRate;
+    }
+
+    public void setInterestRate(Double interestRate) {
+        this.interestRate = interestRate;
+    }
+
+    public Double getTotalPaybackWithInterest() {
+        return totalPaybackWithInterest;
+    }
+
+    public void setTotalPaybackWithInterest(Double totalPaybackWithInterest) {
+        this.totalPaybackWithInterest = totalPaybackWithInterest;
+    }
+
     public PaybackStatus getPaybackStatus() {
         return paybackStatus;
     }
@@ -69,20 +96,16 @@ public class PaybackPageResponse {
         this.paybackDeadline = paybackDeadline;
     }
 
-    public Integer getPaybackAmount() {
-        return paybackAmount;
-    }
 
-    public void setPaybackAmount(Integer paybackAmount) {
-        this.paybackAmount = paybackAmount;
-    }
-
-    public PaybackPageResponse(UUID paybackId, String borrower, String lender, PaybackStatus paybackStatus, String paybackDeadline, Integer paybackAmount) {
+    public PaybackPageResponse(UUID paybackId, String borrower, String lender, PaybackStatus paybackStatus, String paybackDeadline, Integer paybackAmount, Double interestRate, Double totalPaybackWithInterest, String paybackCompletedOn) {
         this.paybackId = paybackId;
         this.borrower = borrower;
         this.lender = lender;
         this.paybackStatus = paybackStatus;
         this.paybackDeadline = paybackDeadline;
         this.paybackAmount = paybackAmount;
+        this.interestRate = interestRate;
+        this.totalPaybackWithInterest = totalPaybackWithInterest;
+        this.paybackCompletedOn = paybackCompletedOn;
     }
 }

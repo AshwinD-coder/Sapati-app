@@ -15,10 +15,7 @@ import global.citytech.user.service.login.UserLoginResponse;
 import global.citytech.user.service.login.UserLoginService;
 import global.citytech.user.service.verifyemail.UserEmailVerificationService;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.http.annotation.Body;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.*;
 import jakarta.inject.Inject;
 
 import java.util.List;
@@ -63,9 +60,11 @@ public class UserController {
         }
     }
 
-    @Post("/verify")
-    public HttpResponse<CustomResponseHandler<String>> verifyUserEmail(@Body UserEmailVerificationDto userEmailVerificationDto) {
+    @Get("/verify/{email}")
+    public HttpResponse<CustomResponseHandler<String>> verifyUserEmail(@PathVariable  String email) {
         try {
+            UserEmailVerificationDto userEmailVerificationDto = new UserEmailVerificationDto();
+            userEmailVerificationDto.setEmail(email);
             return HttpResponse.ok().body(userEmailVerificationService.verifyEmail(userEmailVerificationDto));
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,13 +82,13 @@ public class UserController {
     }
 
     @Post("/delete")
-    public HttpResponse<?> delete(@Body UserDeleteDto userDeleteDto) {
+    public HttpResponse<CustomResponseHandler<String>> delete(@Body UserDeleteDto userDeleteDto) {
         try {
             userDeleteService.deleteUser(userDeleteDto);
             return HttpResponse.ok().body(new CustomResponseHandler<>("0", "User Deletion Success", null));
         } catch (Exception e) {
             e.printStackTrace();
-            return HttpResponse.badRequest().body(e.getMessage());
+            return HttpResponse.badRequest().body(new CustomResponseHandler<>("0",e.getMessage(),null));
         }
     }
 

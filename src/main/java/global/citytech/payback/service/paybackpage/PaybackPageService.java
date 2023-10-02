@@ -3,6 +3,7 @@ package global.citytech.payback.service.paybackpage;
 import global.citytech.payback.repository.Payback;
 import global.citytech.payback.repository.PaybackRepository;
 import global.citytech.payback.service.adapter.converter.PaybackToPaybackPageResponseList;
+import global.citytech.payback.service.interest.InterestService;
 import global.citytech.platform.common.enums.PaybackStatus;
 import global.citytech.platform.common.response.CustomResponseHandler;
 import global.citytech.user.repository.User;
@@ -18,6 +19,9 @@ public class PaybackPageService {
 
     @Inject
     UserRepository userRepository;
+
+    @Inject
+    InterestService interestService;
 
     public PaybackPageService(PaybackRepository paybackRepository, UserRepository userRepository) {
         this.paybackRepository = paybackRepository;
@@ -45,7 +49,12 @@ public class PaybackPageService {
         if(unpaidPaybackPageList.isEmpty()){
             throw new IllegalArgumentException("Unpaid Payback list empty!");
         }
-        List<PaybackPageResponse> unpaidPaybackPageResponseList = PaybackToPaybackPageResponseList.toPaybackPageResponseList(unpaidPaybackPageList);
+        Optional<Payback> payback = this.paybackRepository.findByBorrowerOrLender(paybackPageRequest.getUsername(),paybackPageRequest.getUsername());
+        if(payback.isEmpty()){
+            throw new IllegalArgumentException("Payback not found!");
+        }
+        Double interest = interestService.calculateInterestForPaybackAccept(payback.get().getId());
+        List<PaybackPageResponse> unpaidPaybackPageResponseList = PaybackToPaybackPageResponseList.toPaybackPageResponseList(unpaidPaybackPageList,interest);
         return new CustomResponseHandler<>("0","Unpaid Payback Page Retrieved!",unpaidPaybackPageResponseList);
     }
 

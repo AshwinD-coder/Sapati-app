@@ -4,6 +4,7 @@ import global.citytech.cash.service.adapter.dto.CashDepositDto;
 import global.citytech.cash.repository.Cash;
 
 public class CashDepositDtoToCash {
+    private CashDepositDtoToCash(){}
 
     public  static Cash toCash(CashDepositDto cashDepositDto){
     Cash cash = new Cash();

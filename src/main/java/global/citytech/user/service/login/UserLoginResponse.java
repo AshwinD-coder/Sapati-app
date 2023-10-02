@@ -12,10 +12,6 @@ public class UserLoginResponse {
     private UserType userType;
 
 
-    public UserLoginResponse() {
-
-    }
-
     public String getUsername() {
         return username;
     }

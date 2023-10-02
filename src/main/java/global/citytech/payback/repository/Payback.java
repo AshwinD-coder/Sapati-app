@@ -4,7 +4,6 @@ package global.citytech.payback.repository;
 import global.citytech.platform.common.enums.PaybackStatus;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.data.annotation.DateUpdated;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
 
@@ -22,6 +21,10 @@ public class Payback {
     private String borrower;
     private String lender;
     private Integer paybackAmount;
+    private Double interestRate;
+
+    @Nullable
+    private Double totalPaybackAmountWithInterest;
 
     @Enumerated(EnumType.STRING)
     private PaybackStatus paybackStatus;
@@ -30,11 +33,13 @@ public class Payback {
     @Nullable
     private Timestamp paybackCompletedOn;
 
-    public Payback(UUID id, String borrower, String lender, Integer paybackAmount, PaybackStatus paybackStatus, Date paybackDeadline, @Nullable Timestamp paybackCompletedOn) {
+    public Payback(UUID id, String borrower, String lender, Integer paybackAmount, Double interestRate,@Nullable Double totalPaybackAmountWithInterest, PaybackStatus paybackStatus, Date paybackDeadline, @Nullable Timestamp paybackCompletedOn) {
         this.id = id;
         this.borrower = borrower;
         this.lender = lender;
         this.paybackAmount = paybackAmount;
+        this.interestRate = interestRate;
+        this.totalPaybackAmountWithInterest = totalPaybackAmountWithInterest;
         this.paybackStatus = paybackStatus;
         this.paybackDeadline = paybackDeadline;
         this.paybackCompletedOn = paybackCompletedOn;
@@ -74,6 +79,24 @@ public class Payback {
 
     public void setPaybackAmount(Integer paybackAmount) {
         this.paybackAmount = paybackAmount;
+    }
+
+    public Double getInterestRate() {
+        return interestRate;
+    }
+
+    public void setInterestRate(Double interestRate) {
+        this.interestRate = interestRate;
+    }
+
+    @Nullable
+    public Double getTotalPaybackAmountWithInterest() {
+        return totalPaybackAmountWithInterest;
+    }
+
+    @Nullable
+    public void setTotalPaybackAmountWithInterest(Double totalPaybackAmountWithInterest) {
+        this.totalPaybackAmountWithInterest = totalPaybackAmountWithInterest;
     }
 
     public PaybackStatus getPaybackStatus() {

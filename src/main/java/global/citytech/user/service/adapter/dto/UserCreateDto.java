@@ -1,10 +1,8 @@
 package global.citytech.user.service.adapter.dto;
 
-import global.citytech.platform.common.enums.UserType;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+
 
 @Introspected
 @Serdeable

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BorrowToBorrowPageResponseList {
+    private BorrowToBorrowPageResponseList(){}
+
 
     public static List<BorrowPageResponse> toBorrowPageResponseList(List<Borrow> borrowList){
         List<BorrowPageResponse> borrowPageResponseList = new ArrayList<>();
@@ -17,6 +19,7 @@ public class BorrowToBorrowPageResponseList {
             borrowPageResponse.setRequestFrom(borrow.getBorrower());
             borrowPageResponse.setRequestTo(borrow.getLender());
             borrowPageResponse.setAmount(borrow.getAmount());
+            borrowPageResponse.setInterestRate(borrow.getInterestRate());
             borrowPageResponse.setRemarks(borrow.getRemarks());
             borrowPageResponse.setRequestedAt(borrow.getRequestedAt().toString());
             borrowPageResponse.setReturnDate(borrow.getReturnDate().toString());

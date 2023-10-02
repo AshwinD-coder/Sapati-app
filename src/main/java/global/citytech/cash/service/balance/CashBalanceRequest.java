@@ -1,6 +1,5 @@
 package global.citytech.cash.service.balance;
 
-import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
 
 @Serdeable

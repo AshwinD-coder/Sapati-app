@@ -9,14 +9,16 @@ public class BorrowDto {
     private String borrower;
     private String lender;
     private Integer amount;
+    private Double interestRate;
     private String remarks;
 
     private String returnDate;
 
-    public BorrowDto(String borrower, String lender, Integer amount, String remarks, String returnDate) {
+    public BorrowDto(String borrower, String lender, Integer amount, Double interestRate, String remarks, String returnDate) {
         this.borrower = borrower;
         this.lender = lender;
         this.amount = amount;
+        this.interestRate = interestRate;
         this.remarks = remarks;
         this.returnDate = returnDate;
     }
@@ -33,7 +35,16 @@ public class BorrowDto {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public Double getInterestRate() {
+        return interestRate;
+    }
+
+    public void setInterestRate(Double interestRate) {
+        this.interestRate = interestRate;
+    }
+
+    public void
+    setAmount(Integer amount) {
         this.amount = amount;
     }
 

@@ -29,7 +29,7 @@ public class UserLoginService {
     }
 
     public void checkVerifyStatus(User user) {
-        if (!user.getVerifyStatus()) {
+        if (user.getVerifyStatus().equals(false)) {
             throw new IllegalArgumentException("User not verified!Please verify through the email address!");
         }
     }
@@ -63,7 +63,7 @@ public class UserLoginService {
     }
 
     private void checkActiveStatus(User user) {
-        if (!user.getActiveStatus()) {
+        if (user.getActiveStatus().equals(false)) {
             throw new IllegalArgumentException("User is not active!");
         }
     }
@@ -71,6 +71,9 @@ public class UserLoginService {
     public CustomResponseHandler<UserLoginResponse> loginUserAccount(UserLoginDto userLoginDTO) {
         String token = authenticateAndValidateUser(userLoginDTO);
         Optional<User> user = this.userRepository.findByUsername(userLoginDTO.getUsername());
+        if(user.isEmpty()){
+            throw new IllegalArgumentException("User not found!");
+        }
         UserLoginResponse userLoginResponse = UserToUserLoginResponse.toUserLoginResponse(user.get(), token);
         JwtParser.parseToken(token);
         expireService.expireMoneyRequests();

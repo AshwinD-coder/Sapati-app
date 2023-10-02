@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 @JdbcRepository(dialect = Dialect.POSTGRES)
-public interface CashRepository extends CrudRepository<Cash,Long> {
+public interface CashRepository extends CrudRepository<Cash, Long> {
 
     Optional<Cash> findByUsername(String username);
 }

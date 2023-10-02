@@ -48,12 +48,13 @@ public class BorrowController {
 
     @Post(value = "/qr", consumes = MediaType.MULTIPART_FORM_DATA)
     public HttpResponse<CustomResponseHandler<String>> getImage(
-            CompletedFileUpload lender, @Part(value = "amount") Integer amount
-            , @Part("returnDate") String returnDate, @Part("remarks") String remarks,
+            CompletedFileUpload lender, @Part(value = "amount") Integer amount,
+            @Part(value = "interestRate") Double interestRate,
+             @Part("returnDate") String returnDate, @Part("remarks") String remarks,
             @Part("borrower") String borrower) {
         try {
             UserQrRequest userQrRequest = UserQrService.readQR(lender.getFilename());
-            BorrowDto borrowDto = new BorrowDto(borrower, userQrRequest.getUsername(), amount, remarks, returnDate);
+            BorrowDto borrowDto = new BorrowDto(borrower, userQrRequest.getUsername(), amount,interestRate ,remarks, returnDate);
             return HttpResponse.ok().body(borrowService.requestMoney(borrowDto));
         } catch (Exception e) {
             e.printStackTrace();

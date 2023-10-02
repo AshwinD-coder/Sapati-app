@@ -33,8 +33,6 @@ public class DeadlineService {
                 if (borrower.isEmpty()) {
                     throw new IllegalArgumentException("Borrower has ran away!");
                 }
-                System.out.println(currentDate);
-                System.out.println(payback.getPaybackDeadline());
                 borrower.get().setBlacklistStatus(true);
                 this.userRepository.update(borrower.get());
             }

@@ -27,8 +27,11 @@ public class Borrow {
     private String borrower;
     private String lender;
     private Integer amount;
+    private Double interestRate;
     private String remarks;
+
     private Date returnDate;
+
 
     @Enumerated(EnumType.STRING)
     private RequestStatus requestStatus;
@@ -40,11 +43,12 @@ public class Borrow {
     private Timestamp requestStatusUpdatedOn;
 
 
-    public Borrow(UUID transactionId, String borrower, String lender, Integer amount, String remarks, Date returnDate, RequestStatus requestStatus, Timestamp requestedAt, @Nullable Timestamp requestStatusUpdatedOn) {
+    public Borrow(UUID transactionId, String borrower, String lender, Integer amount, Double interestRate, String remarks, Date returnDate, RequestStatus requestStatus, Timestamp requestedAt, Timestamp requestStatusUpdatedOn) {
         this.transactionId = transactionId;
         this.borrower = borrower;
         this.lender = lender;
         this.amount = amount;
+        this.interestRate = interestRate;
         this.remarks = remarks;
         this.returnDate = returnDate;
         this.requestStatus = requestStatus;
@@ -93,6 +97,14 @@ public class Borrow {
 
     public void setAmount(Integer amount) {
         this.amount = amount;
+    }
+
+    public Double getInterestRate() {
+        return interestRate;
+    }
+
+    public void setInterestRate(Double interestRate) {
+        this.interestRate = interestRate;
     }
 
     public String getRemarks() {

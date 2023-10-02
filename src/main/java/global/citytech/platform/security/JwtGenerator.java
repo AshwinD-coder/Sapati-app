@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JwtGenerator {
+    private JwtGenerator(){
+
+    }
 
     public static String generateToken(String username, UserType userType) {
         Date issuedAt = new Date();

@@ -4,9 +4,12 @@ import global.citytech.borrow.repository.Borrow;
 import global.citytech.borrow.repository.BorrowRepository;
 import global.citytech.borrow.service.adapter.converter.BorrowDtoToBorrow;
 import global.citytech.borrow.service.adapter.dto.BorrowDto;
+import global.citytech.borrow.service.mail.BorrowMailService;
 import global.citytech.platform.common.enums.RequestStatus;
 import global.citytech.platform.common.enums.UserType;
 import global.citytech.platform.common.response.CustomResponseHandler;
+import global.citytech.platform.email.EmailConfiguration;
+import global.citytech.platform.email.EmailService;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
 import jakarta.inject.Inject;
@@ -21,6 +24,8 @@ public class BorrowService {
     private BorrowRepository borrowRepository;
     @Inject
     private UserRepository userRepository;
+    @Inject
+    BorrowMailService borrowMailService;
 
     public BorrowService(BorrowRepository borrowRepository, UserRepository userRepository) {
         this.borrowRepository = borrowRepository;
@@ -31,11 +36,10 @@ public class BorrowService {
         Borrow borrow = BorrowDtoToBorrow.toBorrow(borrowDto);
         validateRequest(borrowDto);
         this.borrowRepository.save(borrow);
-
+        EmailConfiguration emailConfiguration = borrowMailService.setEmailConfigurationForBorrowMailLender(borrow);
+        EmailService.sendMail(emailConfiguration);
         return new CustomResponseHandler<>("0", "Money Request Complete!", null);
     }
-
-
 
 
     public void validateReturnDate(BorrowDto borrowDto) throws ParseException {
@@ -48,12 +52,13 @@ public class BorrowService {
     }
 
     public void validateAmount(BorrowDto borrowDto) {
-        if(borrowDto.getAmount()<0){
+        if (borrowDto.getAmount() < 0) {
             throw new IllegalArgumentException("Amount cannot be negative!");
-        } if(borrowDto.getAmount()==0){
+        }
+        if (borrowDto.getAmount() == 0) {
             throw new IllegalArgumentException("Amount cannot be zero!");
         }
-        if (borrowDto.getAmount() > 50000 ) {
+        if (borrowDto.getAmount() > 50000) {
             throw new IllegalArgumentException("Request Amount Limit Exceeded! Max Limit Nrs.50000");
         }
         if (borrowDto.getAmount().toString().isBlank() || borrowDto.getAmount().toString().isEmpty()) {
@@ -74,16 +79,16 @@ public class BorrowService {
         if (userRequestTo.isEmpty() || userRequestFrom.isEmpty()) {
             throw new IllegalArgumentException("No such user to request!");
         }
-        if (!userRequestFrom.get().getVerifyStatus()) {
+        if (Boolean.FALSE.equals(userRequestFrom.get().getVerifyStatus())) {
             throw new IllegalArgumentException("Borrower not verified!");
         }
-        if (!userRequestTo.get().getVerifyStatus()) {
+        if (Boolean.FALSE.equals(userRequestTo.get().getVerifyStatus())) {
             throw new IllegalArgumentException("Lender not verified!");
         }
-        if(!userRequestFrom.get().getActiveStatus()){
+        if (Boolean.FALSE.equals(userRequestFrom.get().getActiveStatus())) {
             throw new IllegalArgumentException("Borrower is not active!");
         }
-        if(!userRequestTo.get().getActiveStatus()){
+        if (Boolean.FALSE.equals(userRequestTo.get().getActiveStatus())) {
             throw new IllegalArgumentException("Lender is not active!");
         }
         if (userRequestFrom.get().getUserType().compareTo(UserType.BORROWER) != 0) {

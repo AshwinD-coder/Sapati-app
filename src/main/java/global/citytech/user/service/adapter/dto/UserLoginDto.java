@@ -2,7 +2,6 @@ package global.citytech.user.service.adapter.dto;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
-import jakarta.validation.constraints.NotNull;
 
 @Introspected
 @Serdeable

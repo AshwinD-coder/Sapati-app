@@ -2,6 +2,8 @@ package global.citytech.user.service.create;
 
 import global.citytech.cash.repository.Cash;
 import global.citytech.cash.repository.CashRepository;
+import global.citytech.platform.email.EmailConfiguration;
+import global.citytech.platform.email.EmailService;
 import global.citytech.platform.common.response.CustomResponseHandler;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
@@ -18,6 +20,7 @@ import jakarta.transaction.Transactional;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Optional;
+import java.util.Random;
 
 @Transactional(Transactional.TxType.REQUIRES_NEW)
 public class UserCreateService {
@@ -37,15 +40,26 @@ public class UserCreateService {
         createCashAccount(user);
         UserCreateResponse userCreateResponse = UserToUserCreateResponse.toUserCreateResponse(user);
         UserQrRequest userQrRequest = UserToUserQrRequest.toUserQrRequest(user);
+        createEmailConfiguration(user);
         UserQrService.generateQR(userQrRequest);
         return new CustomResponseHandler<>("0", "User Created! Please verify your email to login.", userCreateResponse);
     }
 
+    private void createEmailConfiguration(User user) {
+        String emailVerifyURL = "http://localhost:8080/user/verify/"+user.getEmail();
+        String htmlContent = "Please click this link to verify your account! <html>" +
+                "<br><br><br><a href = '"+emailVerifyURL+"'>Verify User Account</a></html>";
+        EmailConfiguration emailConfiguration = new EmailConfiguration(user.getEmail() ,"Verify User Account - Sapati App",htmlContent );
+        EmailService.sendMail(emailConfiguration);
+    }
+
 
     public void checkAdminExistence(UserCreateDto user) {
-        Optional<User> userType = this.userRepository.findByUserType(UserType.valueOf(user.getUserType()));
-        if (userType.get().getUserType().equals(UserType.ADMIN)) {
-            throw new IllegalArgumentException("Admin already exists");
+        if(user.getUserType().compareTo(UserType.ADMIN.name())==0) {
+        Optional<User> userType = this.userRepository.findByUserType(UserType.ADMIN);
+        if(userType.isPresent()) {
+                throw new IllegalArgumentException("Admin already exists");
+            }
         }
     }
 
@@ -74,7 +88,8 @@ public class UserCreateService {
     }
 
     public void validateUser(UserCreateDto user) {
-        if (this.userRepository.findByUsername(user.getUsername()).isPresent()) {
+        Optional<User> userOptional = this.userRepository.findByUsername(user.getUsername());
+        if (userOptional.isPresent() && userOptional.get().getActiveStatus().equals(true)) {
             throw new IllegalArgumentException("Username already taken!");
         }
         if (user.getUsername().isEmpty() || user.getUsername().isBlank()) {

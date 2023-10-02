@@ -5,7 +5,7 @@ import io.micronaut.serde.annotation.Serdeable;
 @Serdeable
 public class CashBalanceResponse {
     private String username;
-    private Integer amount;
+    private Double amount;
 
     public CashBalanceResponse() {
 
@@ -19,15 +19,15 @@ public class CashBalanceResponse {
         this.username = username;
     }
 
-    public Integer getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
-    public CashBalanceResponse(String username, Integer amount) {
+    public CashBalanceResponse(String username, Double amount) {
         this.username = username;
         this.amount = amount;
     }

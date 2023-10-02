@@ -16,23 +16,20 @@ public class Cash {
     private Long id;
     private String username;
 
-    private Integer amount;
+    private Double amount;
 
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
-    public Cash(Long id, String username, Integer amount, UserType userType) {
+    public Cash(Long id, String username, Double amount, UserType userType) {
         this.id = id;
         this.username = username;
         this.amount = amount;
         this.userType = userType;
     }
 
-    public Cash(){
+    public Cash() {
 
-    }
-
-    public Cash(String username, int i) {
     }
 
     public Long getId() {
@@ -51,11 +48,11 @@ public class Cash {
         this.username = username;
     }
 
-    public Integer getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 

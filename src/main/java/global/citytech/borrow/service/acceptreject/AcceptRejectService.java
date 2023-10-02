@@ -3,6 +3,7 @@ package global.citytech.borrow.service.acceptreject;
 import global.citytech.borrow.repository.Borrow;
 import global.citytech.borrow.repository.BorrowRepository;
 import global.citytech.borrow.service.adapter.converter.BorrowToPayback;
+import global.citytech.borrow.service.mail.BorrowMailService;
 import global.citytech.cash.repository.Cash;
 import global.citytech.cash.repository.CashRepository;
 import global.citytech.cash.service.update.CashRepositoryUpdateService;
@@ -36,6 +37,8 @@ public class AcceptRejectService {
 
     @Inject
     CashRepositoryUpdateService cashRepositoryUpdateService;
+    @Inject
+    BorrowMailService borrowMailService;
 
     public AcceptRejectService(BorrowRepository borrowRepository, UserRepository userRepository, CashRepository cashRepository, PaybackRepository paybackRepository) {
         this.borrowRepository = borrowRepository;
@@ -48,6 +51,9 @@ public class AcceptRejectService {
         validateRequest(acceptRejectRequest);
         Optional<Borrow> moneyRequest = this.borrowRepository.findById(acceptRejectRequest.getTransactionId());
         Optional<Cash> lenderAccount = this.cashRepository.findByUsername(acceptRejectRequest.getLenderUsername());
+        if (moneyRequest.isEmpty() || lenderAccount.isEmpty()) {
+            throw new IllegalArgumentException("Transaction Id Invalid!");
+        }
         Borrow request = moneyRequest.get();
         checkAvailableCash(lenderAccount.get(), request);
         cashRepositoryUpdateService.updateCashRepositoryForBorrow(acceptRejectRequest);
@@ -70,11 +76,14 @@ public class AcceptRejectService {
         if (user.get().getUserType() != UserType.LENDER) {
             throw new IllegalArgumentException("Only lender can accept or reject request!");
         }
-        if(user.get().getActiveStatus().equals(false)){
+        if (user.get().getActiveStatus().equals(false)) {
             throw new IllegalArgumentException("Lender is not active!");
         }
         Optional<User> borrower = this.userRepository.findByUsername(moneyRequest.get().getBorrower());
-        if(borrower.get().getActiveStatus().equals(false)){
+        if (borrower.isEmpty()) {
+            throw new IllegalArgumentException("Borrower not found!");
+        }
+        if (borrower.get().getActiveStatus().equals(false)) {
             throw new IllegalArgumentException("Borrower is not active!");
         }
         if (moneyRequest.get().getRequestStatus() != RequestStatus.PENDING) {
@@ -93,6 +102,9 @@ public class AcceptRejectService {
 
     private void addPayback(UUID transactionId) {
         Optional<Borrow> borrow = this.borrowRepository.findById(transactionId);
+        if (borrow.isEmpty()) {
+            throw new IllegalArgumentException("Money Request not found!");
+        }
         Payback payback = BorrowToPayback.toPayback(borrow.get());
         this.paybackRepository.save(payback);
     }
@@ -100,6 +112,9 @@ public class AcceptRejectService {
     public CustomResponseHandler<AcceptRejectResponse> rejectRequest(AcceptRejectRequest acceptRejectRequest) {
         validateRequest(acceptRejectRequest);
         Optional<Borrow> moneyRequest = this.borrowRepository.findById(acceptRejectRequest.getTransactionId());
+        if (moneyRequest.isEmpty()) {
+            throw new IllegalArgumentException("Money request not found!");
+        }
         Borrow request = moneyRequest.get();
         request.setRequestStatus(RequestStatus.REJECTED);
         this.borrowRepository.update(request);

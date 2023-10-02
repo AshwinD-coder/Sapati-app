@@ -3,8 +3,8 @@ package global.citytech.user.service.adapter.dto;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
 
-@Serdeable
 @Introspected
+@Serdeable
 
 public class UserEmailVerificationDto {
     private String Email;
@@ -12,6 +12,10 @@ public class UserEmailVerificationDto {
 
     public UserEmailVerificationDto(String email) {
         Email = email;
+    }
+
+    public UserEmailVerificationDto() {
+
     }
 
     public String getEmail() {

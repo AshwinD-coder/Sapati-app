@@ -4,6 +4,7 @@ import global.citytech.user.repository.User;
 import global.citytech.user.service.login.UserLoginResponse;
 
 public class UserToUserLoginResponse {
+    private UserToUserLoginResponse(){}
     public static UserLoginResponse toUserLoginResponse(User user, String token){
         UserLoginResponse userLoginResponse = new UserLoginResponse();
         userLoginResponse.setUsername(user.getUsername());

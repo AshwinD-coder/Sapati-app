@@ -58,7 +58,7 @@ public class BorrowPageService {
         validateBorrowPageRequest(borrowPageRequest);
         List<Borrow> rejectedRequestList = this.borrowRepository.findByBorrowerOrLenderAndRequestStatusIn(borrowPageRequest.getUsername(), borrowPageRequest.getUsername(), RequestStatus.REJECTED);
         if (rejectedRequestList.isEmpty()) {
-            throw new IllegalArgumentException("Rejected List Empty!");
+            throw new IllegalArgumentException("Rejected List Empty!!");
         }
         List<BorrowPageResponse> rejectedPageResponseList = BorrowToBorrowPageResponseList.toBorrowPageResponseList(rejectedRequestList);
         return new CustomResponseHandler<>("0", "Rejected page retrieved!", rejectedPageResponseList);

@@ -4,6 +4,7 @@ import global.citytech.user.repository.User;
 import global.citytech.user.service.qr.UserQrRequest;
 
 public class UserToUserQrRequest {
+    private UserToUserQrRequest(){}
     public static UserQrRequest toUserQrRequest(User user){
     UserQrRequest userQrRequest = new UserQrRequest();
     userQrRequest.setUsername(user.getUsername());

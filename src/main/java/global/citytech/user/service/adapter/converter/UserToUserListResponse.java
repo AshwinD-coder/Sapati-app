@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserToUserListResponse {
+    private UserToUserListResponse(){}
 
     public static List<UserListResponse> toUserListResponse(List<User> users){
         List<UserListResponse> userListResponses = new ArrayList<>();

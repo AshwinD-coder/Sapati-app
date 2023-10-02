@@ -10,8 +10,7 @@
 //
 //import jakarta.inject.Inject;
 //
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.junit.jupiter.api.Assertions.assertNotNull;
+//import static org.junit.jupiter.api.Assertions.*;
 //
 //@MicronautTest
 //class MyappTest {
@@ -26,6 +25,7 @@
 //    String body = client.toBlocking().retrieve(request);
 //    assertNotNull(body);
 //    assertEquals("System running...",body);
+//
 //}
 //
 //}

@@ -1,7 +1,5 @@
 package global.citytech.user.service.delete;
 
-import global.citytech.cash.repository.Cash;
-import global.citytech.cash.repository.CashRepository;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
 import global.citytech.user.service.adapter.dto.UserDeleteDto;
