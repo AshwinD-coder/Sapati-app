@@ -4,6 +4,7 @@ import global.citytech.cash.repository.Cash;
 import global.citytech.cash.repository.CashRepository;
 import global.citytech.cash.service.adapter.converter.CashToCashBalanceResponse;
 import global.citytech.platform.common.response.CustomResponseHandler;
+import global.citytech.platform.security.ContextHolder;
 import jakarta.inject.Inject;
 
 import java.util.Optional;
@@ -16,8 +17,8 @@ public class CashBalanceService {
         this.cashRepository = cashRepository;
     }
 
-    public CustomResponseHandler<CashBalanceResponse> getCashBalance(CashBalanceRequest cashBalanceRequest) {
-        Optional<Cash> cash = this.cashRepository.findByUsername(cashBalanceRequest.getUsername());
+    public CustomResponseHandler<CashBalanceResponse> getCashBalance() {
+        Optional<Cash> cash = this.cashRepository.findByUsername(ContextHolder.get().getUsername());
         if (cash.isEmpty()) {
             throw new IllegalArgumentException("No cash account found!");
         }

@@ -7,18 +7,19 @@ import io.micronaut.serde.annotation.Serdeable;
 public class UserCreateResponse {
     private String username;
     private String email;
-    private UserType userType;
+    private String userType;
 
     private Boolean verifyStatus;
 
 
-    public UserCreateResponse(String username, String email, UserType userType, Boolean verifyStatus) {
+    public UserCreateResponse(String username, String email, String userType, Boolean verifyStatus) {
         this.username = username;
         this.email = email;
         this.userType = userType;
         this.verifyStatus = verifyStatus;
-
     }
+
+
 
     public UserCreateResponse() {
     }
@@ -39,11 +40,11 @@ public class UserCreateResponse {
         this.email = email;
     }
 
-    public UserType getUserType() {
+    public String getUserType() {
         return userType;
     }
 
-    public void setUserType(UserType userType) {
+    public void setUserType(String userType) {
         this.userType = userType;
     }
 
@@ -53,5 +54,15 @@ public class UserCreateResponse {
 
     public void setVerifyStatus(Boolean verifyStatus) {
         this.verifyStatus = verifyStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "UserCreateResponse{" +
+                "username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", userType='" + userType + '\'' +
+                ", verifyStatus=" + verifyStatus +
+                '}';
     }
 }

@@ -8,6 +8,7 @@ import global.citytech.cash.repository.CashRepository;
 import global.citytech.payback.repository.Payback;
 import global.citytech.payback.repository.PaybackRepository;
 import global.citytech.payback.service.accept.PaybackAcceptRequest;
+import global.citytech.platform.security.ContextHolder;
 import jakarta.inject.Inject;
 
 import java.util.Optional;
@@ -28,7 +29,7 @@ public class CashRepositoryUpdateService {
     }
 
     public void updateCashRepositoryForBorrow(AcceptRejectRequest acceptRejectRequest) {
-        Optional<Cash> lenderCashAccount = this.cashRepository.findByUsername(acceptRejectRequest.getLenderUsername());
+        Optional<Cash> lenderCashAccount = this.cashRepository.findByUsername(ContextHolder.get().getUsername());
         Optional<Borrow> borrowRequest = this.borrowRepository.findByTransactionId(acceptRejectRequest.getTransactionId());
         if(borrowRequest.isEmpty()){
             throw new IllegalArgumentException("Couldn't find money request!");

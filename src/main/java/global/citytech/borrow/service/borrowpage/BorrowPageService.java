@@ -5,6 +5,7 @@ import global.citytech.borrow.repository.BorrowRepository;
 import global.citytech.borrow.service.adapter.converter.BorrowToBorrowPageResponseList;
 import global.citytech.platform.common.enums.RequestStatus;
 import global.citytech.platform.common.response.CustomResponseHandler;
+import global.citytech.platform.security.ContextHolder;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
 import jakarta.inject.Inject;
@@ -25,16 +26,16 @@ public class BorrowPageService {
         this.userRepository = userRepository;
     }
 
-    public void validateBorrowPageRequest(BorrowPageRequest borrowPageRequest){
-        Optional<User> user = this.userRepository.findByUsername(borrowPageRequest.getUsername());
+    public void validateBorrowPageRequest(String username){
+        Optional<User> user = this.userRepository.findByUsername(username);
         if(user.isEmpty()){
             throw  new IllegalArgumentException("User not found!");
         }
     }
 
-    public CustomResponseHandler<List<BorrowPageResponse>> viewPendingPage(BorrowPageRequest borrowPageRequest) {
-        validateBorrowPageRequest(borrowPageRequest);
-        List<Borrow> pendingRequestList = this.borrowRepository.findByBorrowerOrLenderAndRequestStatusIn(borrowPageRequest.getUsername(), borrowPageRequest.getUsername(), RequestStatus.PENDING);
+    public CustomResponseHandler<List<BorrowPageResponse>> viewPendingPage() {
+        validateBorrowPageRequest(ContextHolder.get().getUsername());
+        List<Borrow> pendingRequestList = this.borrowRepository.findByBorrowerOrLenderAndRequestStatusIn(ContextHolder.get().getUsername(), ContextHolder.get().getUsername(), RequestStatus.PENDING);
         if (pendingRequestList.isEmpty()) {
             throw new IllegalArgumentException("Pending List Empty!");
         }
@@ -44,9 +45,9 @@ public class BorrowPageService {
 
     }
 
-    public CustomResponseHandler<List<BorrowPageResponse>> viewAcceptedPage(BorrowPageRequest borrowPageRequest) {
-        validateBorrowPageRequest(borrowPageRequest);
-        List<Borrow> acceptedRequestList = this.borrowRepository.findByBorrowerOrLenderAndRequestStatusIn(borrowPageRequest.getUsername(), borrowPageRequest.getUsername(), RequestStatus.ACCEPTED);
+    public CustomResponseHandler<List<BorrowPageResponse>> viewAcceptedPage() {
+        validateBorrowPageRequest(ContextHolder.get().getUsername());
+        List<Borrow> acceptedRequestList = this.borrowRepository.findByBorrowerOrLenderAndRequestStatusIn(ContextHolder.get().getUsername(), ContextHolder.get().getUsername(), RequestStatus.ACCEPTED);
         if (acceptedRequestList.isEmpty()) {
             throw new IllegalArgumentException("Accepted List Empty!");
         }
@@ -54,9 +55,9 @@ public class BorrowPageService {
         return new CustomResponseHandler<>("0", "Accepted page retrieved!",acceptedPageResponseList);
     }
 
-    public CustomResponseHandler<List<BorrowPageResponse>> viewRejectedPage(BorrowPageRequest borrowPageRequest) {
-        validateBorrowPageRequest(borrowPageRequest);
-        List<Borrow> rejectedRequestList = this.borrowRepository.findByBorrowerOrLenderAndRequestStatusIn(borrowPageRequest.getUsername(), borrowPageRequest.getUsername(), RequestStatus.REJECTED);
+    public CustomResponseHandler<List<BorrowPageResponse>> viewRejectedPage() {
+        validateBorrowPageRequest(ContextHolder.get().getUsername());
+        List<Borrow> rejectedRequestList = this.borrowRepository.findByBorrowerOrLenderAndRequestStatusIn(ContextHolder.get().getUsername(),ContextHolder.get().getUsername(), RequestStatus.REJECTED);
         if (rejectedRequestList.isEmpty()) {
             throw new IllegalArgumentException("Rejected List Empty!!");
         }
@@ -65,9 +66,9 @@ public class BorrowPageService {
 
     }
 
-    public CustomResponseHandler<List<BorrowPageResponse>> viewExpiredPage(BorrowPageRequest borrowPageRequest) {
-        validateBorrowPageRequest(borrowPageRequest);
-      List<Borrow> expiredRequestList = this.borrowRepository.findByBorrowerOrLenderAndRequestStatusIn(borrowPageRequest.getUsername(),borrowPageRequest.getUsername(),RequestStatus.EXPIRED);
+    public CustomResponseHandler<List<BorrowPageResponse>> viewExpiredPage() {
+        validateBorrowPageRequest(ContextHolder.get().getUsername());
+      List<Borrow> expiredRequestList = this.borrowRepository.findByBorrowerOrLenderAndRequestStatusIn(ContextHolder.get().getUsername(),ContextHolder.get().getUsername(),RequestStatus.EXPIRED);
       if(expiredRequestList.isEmpty()){
           throw new IllegalArgumentException("Expired List Empty");
       }

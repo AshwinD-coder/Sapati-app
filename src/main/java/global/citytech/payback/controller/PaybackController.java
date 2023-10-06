@@ -23,10 +23,6 @@ public class PaybackController {
 
     @Inject
     PaybackPageService paybackPageService;
-    @Get("/")
-    public String index(){
-        return "Payback Page!";
-    }
     @Post("/")
     public HttpResponse<CustomResponseHandler<PaybackAcceptResponse>> acceptPayback(@Body PaybackAcceptRequest paybackAcceptRequest){
         try{
@@ -38,20 +34,20 @@ public class PaybackController {
 
     }
 
-    @Post("/paid")
-    public HttpResponse<CustomResponseHandler<List<PaybackPageResponse>>> viewPaidPaybackPage(@Body PaybackPageRequest paybackPageRequest){
+    @Get("/paid")
+    public HttpResponse<CustomResponseHandler<List<PaybackPageResponse>>> viewPaidPaybackPage(){
         try{
-            return HttpResponse.ok().body(paybackPageService.viewPaidPaybackPage(paybackPageRequest));
+            return HttpResponse.ok().body(paybackPageService.viewPaidPaybackPage());
         }
         catch (Exception e){
             e.printStackTrace();
             return HttpResponse.badRequest().body(new CustomResponseHandler<>("0",e.getMessage(),null));
         }
     }
-    @Post("/unpaid")
-    public HttpResponse<CustomResponseHandler<List<PaybackPageResponse>>> viewUnpaidPaybackPage(@Body PaybackPageRequest paybackPageRequest){
+    @Get("/unpaid")
+    public HttpResponse<CustomResponseHandler<List<PaybackPageResponse>>> viewUnpaidPaybackPage(){
         try{
-            return HttpResponse.ok().body(paybackPageService.viewUnpaidPaybackPage(paybackPageRequest));
+            return HttpResponse.ok().body(paybackPageService.viewUnpaidPaybackPage());
         }
         catch (Exception e){
             e.printStackTrace();

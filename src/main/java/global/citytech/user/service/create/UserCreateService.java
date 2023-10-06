@@ -2,25 +2,28 @@ package global.citytech.user.service.create;
 
 import global.citytech.cash.repository.Cash;
 import global.citytech.cash.repository.CashRepository;
-import global.citytech.platform.email.EmailConfiguration;
-import global.citytech.platform.email.EmailService;
+import global.citytech.platform.common.email.EmailConfiguration;
+import global.citytech.platform.common.email.EmailSender;
+import global.citytech.platform.common.enums.UserType;
+import global.citytech.platform.common.exceptions.CustomException;
+import global.citytech.platform.common.exceptions.ExceptionCode;
 import global.citytech.platform.common.response.CustomResponseHandler;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
-import global.citytech.platform.common.enums.UserType;
-import global.citytech.user.service.adapter.converter.UserCreateDtoToUser;
-import global.citytech.user.service.adapter.converter.UserToCash;
-import global.citytech.user.service.adapter.converter.UserToUserCreateResponse;
-import global.citytech.user.service.adapter.converter.UserToUserQrRequest;
+import global.citytech.user.service.adapter.converter.UserConverter;
 import global.citytech.user.service.adapter.dto.UserCreateDto;
 import global.citytech.user.service.qr.UserQrRequest;
 import global.citytech.user.service.qr.UserQrService;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Optional;
-import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.apache.commons.lang3.RandomStringUtils.*;
 
 @Transactional(Transactional.TxType.REQUIRES_NEW)
 public class UserCreateService {
@@ -30,109 +33,130 @@ public class UserCreateService {
     @Inject
     private CashRepository cashRepository;
 
+    public UserCreateService(UserRepository userRepository, CashRepository cashRepository) {
+        this.userRepository = userRepository;
+        this.cashRepository = cashRepository;
+    }
 
-
-    public CustomResponseHandler<UserCreateResponse> createUserAndCashAccount(UserCreateDto userCreateDTO) {
+    public CustomResponseHandler<UserCreateResponse> createUserAndCashAccount(UserCreateDto userCreateDTO) throws CustomException {
         validateCreateUser(userCreateDTO);
-        User user = UserCreateDtoToUser.toUser(userCreateDTO);
+        User user = UserConverter.toUser(userCreateDTO);
         hashPassword(user);
+        generateOTP(user);
         this.userRepository.save(user);
         createCashAccount(user);
-        UserCreateResponse userCreateResponse = UserToUserCreateResponse.toUserCreateResponse(user);
-        UserQrRequest userQrRequest = UserToUserQrRequest.toUserQrRequest(user);
-        createEmailConfiguration(user);
+        UserCreateResponse userCreateResponse = UserConverter.toUserCreateResponse(user);
+        UserQrRequest userQrRequest = UserConverter.toUserQrRequest(user);
+        userCreateEmailConfiguration(user);
         UserQrService.generateQR(userQrRequest);
         return new CustomResponseHandler<>("0", "User Created! Please verify your email to login.", userCreateResponse);
     }
 
-    private void createEmailConfiguration(User user) {
-        String emailVerifyURL = "http://localhost:8080/user/verify/"+user.getEmail();
-        String htmlContent = "Please click this link to verify your account! <html>" +
-                "<br><br><br><a href = '"+emailVerifyURL+"'>Verify User Account</a></html>";
-        EmailConfiguration emailConfiguration = new EmailConfiguration(user.getEmail() ,"Verify User Account - Sapati App",htmlContent );
-        EmailService.sendMail(emailConfiguration);
+    private void generateOTP(User user) {
+        String numbers = "0123456789";
+        user.setOtp(random(5,numbers));
     }
 
-
-    public void checkAdminExistence(UserCreateDto user) {
-        if(user.getUserType().compareTo(UserType.ADMIN.name())==0) {
-        Optional<User> userType = this.userRepository.findByUserType(UserType.ADMIN);
-        if(userType.isPresent()) {
-                throw new IllegalArgumentException("Admin already exists");
-            }
-        }
+    private void userCreateEmailConfiguration(User user) {
+        String htmlContent = """
+                <html>
+                Your OTP is : [otp]
+                </html>
+                """;
+        EmailConfiguration emailConfiguration = new EmailConfiguration(user.getEmail() ,"OTP Email Verification - Sapati App",htmlContent.replace("[otp]", user.getOtp()) );
+        EmailSender.sendMail(emailConfiguration);
     }
 
-
-    public void checkEmailExistence(UserCreateDto user) {
-        Optional<User> existingUser = this.userRepository.findByEmail(user.getEmail());
-        if (existingUser.isPresent()) {
-            throw new IllegalArgumentException("User with this email already exists!");
-        }
-    }
-
-    public void validatePassword(UserCreateDto user) {
-        String password = user.getPassword();
+    private void validatePassword(UserCreateDto userCreateDto) throws CustomException {
+        String password = userCreateDto.getPassword();
+        Pattern lowerCasePattern = Pattern.compile("[a-z ]");
+        Pattern upperCasePattern = Pattern.compile("[A-Z ]");
+        Pattern numberPattern = Pattern.compile("[0-9 ]");
+        Pattern specialCharacterPattern = Pattern.compile("[^a-zA-Z0-9 ]");
         if (password.isBlank() || password.isEmpty()) {
-            throw new IllegalArgumentException("Password cannot be empty or blank!!");
+            throw new CustomException(ExceptionCode.PASSWORD_EMPTY_OR_BLANK);
         }
         if (password.length() < 8) {
-            throw new IllegalArgumentException("Password must contain at least 8 characters.");
-        }
-        if(password.length()>15){
-            throw new IllegalArgumentException("Password cannot be longer than 15 characters!");
+            throw new CustomException(ExceptionCode.PASSWORD_LENGTH_LESS_THAN_8);
         }
         if (password.contains(" ")) {
-            throw new IllegalArgumentException("Password cannot contain whitespaces!");
+            throw new CustomException(ExceptionCode.PASSWORD_CONTAINS_WHITESPACE);
+        }
+        if (!lowerCasePattern.matcher(password).find()) {
+            throw new CustomException(ExceptionCode.PASSWORD_PATTERN_INVALID);
+        }
+        if (!upperCasePattern.matcher(password).find()) {
+            throw new CustomException(ExceptionCode.PASSWORD_PATTERN_INVALID);
+        }
+        if (!numberPattern.matcher(password).find()) {
+            throw new CustomException(ExceptionCode.PASSWORD_PATTERN_INVALID);
+        }
+        if (!specialCharacterPattern.matcher(password).find()) {
+            throw new CustomException(ExceptionCode.PASSWORD_PATTERN_INVALID);
         }
     }
 
-    public void validateUser(UserCreateDto user) {
-        Optional<User> userOptional = this.userRepository.findByUsername(user.getUsername());
+    private void validateUser(UserCreateDto userCreateDto) throws CustomException {
+        Optional<User> userOptional = this.userRepository.findByUsername(userCreateDto.getUsername());
+        Optional<User> admin = this.userRepository.findByUserType(UserType.ADMIN);
         if (userOptional.isPresent() && userOptional.get().getActiveStatus().equals(true)) {
-            throw new IllegalArgumentException("Username already taken!");
+            throw new CustomException(ExceptionCode.USERNAME_ALREADY_TAKEN);
         }
-        if (user.getUsername().isEmpty() || user.getUsername().isBlank()) {
-            throw new IllegalArgumentException("Username cannot be empty or blank!");
+        if (userCreateDto.getUsername().isEmpty() || userCreateDto.getUsername().isBlank()) {
+            throw new CustomException(ExceptionCode.USERNAME_EMPTY_OR_BLANK);
         }
-        if (user.getUsername().contains(" ")) {
-            throw new IllegalArgumentException("Username cannot contain whitespace!");
+        if (userCreateDto.getUsername().contains(" ")) {
+            throw new CustomException(ExceptionCode.USERNAME_CONTAINS_WHITESPACE);
         }
-        if(user.getUsername().length()>15){
-            throw new IllegalArgumentException("Username cannot be longer than 15 characters!");
-        }
-    }
-
-    public void validateCreateUser(UserCreateDto user) {
-        validateUser(user);
-        validatePassword(user);
-        validateUserType(user);
-        checkEmailExistence(user);
-        checkAdminExistence(user);
-    }
-
-    private void validateUserType(UserCreateDto user) {
-        if(!user.getUserType().equalsIgnoreCase("borrower") && !user.getUserType().equalsIgnoreCase("admin") && !user.getUserType().equalsIgnoreCase("lender")){
-            throw new IllegalArgumentException("User type not allowed to create!");
+        if (admin.isPresent() && userCreateDto.getUserType().equalsIgnoreCase("admin")) {
+            throw new CustomException(ExceptionCode.ADMIN_ALREADY_EXISTS);
         }
     }
 
+    private void validateCreateUser(UserCreateDto userCreateDto) throws CustomException {
+        validateUser(userCreateDto);
+        validatePassword(userCreateDto);
+        validateUserType(userCreateDto);
+        validateEmail(userCreateDto);
+    }
 
-    public static void hashPassword(User user) {
+    private void validateEmail(UserCreateDto userCreateDto) throws CustomException {
+        Optional<User> user = this.userRepository.findByEmail(userCreateDto.getEmail());
+        Pattern pattern = Pattern.compile("[a-zA-Z0-9][a-zA-Z0-9-.]*@gmail[.]com");
+        Matcher matcher = pattern.matcher(userCreateDto.getEmail());
+        Boolean isValidEmail = matcher.matches();
+        if (isValidEmail.equals(false)) {
+            throw new CustomException(ExceptionCode.EMAIL_FORMAT_INCORRECT);
+        }
+        if (user.isPresent()) {
+            throw new CustomException(ExceptionCode.USER_EMAIL_EXISTS);
+        }
+
+    }
+
+    private void validateUserType(UserCreateDto userCreateDto) throws CustomException {
+        if (!userCreateDto.getUserType().equalsIgnoreCase("admin") && !userCreateDto
+                .getUserType().equalsIgnoreCase("borrower") && !userCreateDto.getUserType().equalsIgnoreCase("lender")) {
+            throw new CustomException(ExceptionCode.USER_TYPE_NOT_ALLOWED);
+        }
+    }
+
+
+    private static void hashPassword(User user) {
         user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
     }
 
-    public void validateCashAccount(User user) {
+    private void validateCashAccount(User user) throws CustomException {
         Optional<Cash> cashAccount = this.cashRepository.findByUsername(user.getUsername());
         if (cashAccount.isPresent()) {
-            throw new IllegalArgumentException("Cash Account Already exists for user");
+            throw new CustomException(ExceptionCode.CASH_ACCOUNT_ALREADY_EXISTS);
         }
     }
 
-    public void createCashAccount(User user) {
+    private void createCashAccount(User user) throws CustomException {
         validateCashAccount(user);
-        if(!user.getUserType().equals(UserType.ADMIN)) {
-            this.cashRepository.save(UserToCash.toCash(user));
+        if (!user.getUserType().equals(UserType.ADMIN)) {
+            this.cashRepository.save(UserConverter.toCash(user));
         }
     }
 

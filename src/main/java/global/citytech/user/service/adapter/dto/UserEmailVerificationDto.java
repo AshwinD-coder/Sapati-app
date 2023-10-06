@@ -9,9 +9,11 @@ import io.micronaut.serde.annotation.Serdeable;
 public class UserEmailVerificationDto {
     private String Email;
 
+    private String otp;
 
-    public UserEmailVerificationDto(String email) {
+    public UserEmailVerificationDto(String email, String otp) {
         Email = email;
+        this.otp = otp;
     }
 
     public UserEmailVerificationDto() {
@@ -24,6 +26,14 @@ public class UserEmailVerificationDto {
 
     public void setEmail(String email) {
         Email = email;
+    }
+
+    public String getOtp() {
+        return otp;
+    }
+
+    public void setOtp(String otp) {
+        this.otp = otp;
     }
 }
 

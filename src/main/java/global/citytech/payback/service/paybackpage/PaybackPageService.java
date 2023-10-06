@@ -6,10 +6,12 @@ import global.citytech.payback.service.adapter.converter.PaybackToPaybackPageRes
 import global.citytech.payback.service.interest.InterestService;
 import global.citytech.platform.common.enums.PaybackStatus;
 import global.citytech.platform.common.response.CustomResponseHandler;
+import global.citytech.platform.security.ContextHolder;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
 import jakarta.inject.Inject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,35 +29,39 @@ public class PaybackPageService {
         this.paybackRepository = paybackRepository;
         this.userRepository = userRepository;
     }
-    public void validatePaybackRequest(PaybackPageRequest paybackPageRequest){
-        Optional<User> user = this.userRepository.findByUsername(paybackPageRequest.getUsername());
-        if(user.isEmpty()){
+
+    public void validatePaybackRequest(String username) {
+        Optional<User> user = this.userRepository.findByUsername(username);
+        if (user.isEmpty()) {
             throw new IllegalArgumentException("User not found!");
         }
     }
 
-    public CustomResponseHandler<List<PaybackPageResponse>> viewPaidPaybackPage(PaybackPageRequest paybackPageRequest){
-        validatePaybackRequest(paybackPageRequest);
-        List<Payback> paidPaybackPageList = this.paybackRepository.findByBorrowerOrLenderAndPaybackStatusIn(paybackPageRequest.getUsername(),paybackPageRequest.getUsername(), PaybackStatus.PAID);
-        if(paidPaybackPageList.isEmpty()){
+    public CustomResponseHandler<List<PaybackPageResponse>> viewPaidPaybackPage() {
+        validatePaybackRequest(ContextHolder.get().getUsername());
+        List<Payback> paidPaybackPageList = this.paybackRepository.findByBorrowerOrLenderAndPaybackStatusIn(ContextHolder.get().getUsername(), ContextHolder.get().getUsername(), PaybackStatus.PAID);
+        if (paidPaybackPageList.isEmpty()) {
             throw new IllegalArgumentException("Paid Payback list empty!");
         }
         List<PaybackPageResponse> paidPaybackPageResponseList = PaybackToPaybackPageResponseList.toPaybackPageResponseList(paidPaybackPageList);
-        return new CustomResponseHandler<>("0","Paid Payback Page Retrieved!",paidPaybackPageResponseList);
+        return new CustomResponseHandler<>("0", "Paid Payback Page Retrieved!", paidPaybackPageResponseList);
     }
-    public CustomResponseHandler<List<PaybackPageResponse>> viewUnpaidPaybackPage(PaybackPageRequest paybackPageRequest){
-        validatePaybackRequest(paybackPageRequest);
-        List<Payback> unpaidPaybackPageList = this.paybackRepository.findByBorrowerOrLenderAndPaybackStatusIn(paybackPageRequest.getUsername(),paybackPageRequest.getUsername(), PaybackStatus.UNPAID);
-        if(unpaidPaybackPageList.isEmpty()){
+
+    public CustomResponseHandler<List<PaybackPageResponse>> viewUnpaidPaybackPage() {
+        validatePaybackRequest(ContextHolder.get().getUsername());
+        List<Payback> unpaidPaybackPageList = this.paybackRepository.findByBorrowerOrLenderAndPaybackStatusIn(ContextHolder.get().getUsername(), ContextHolder.get().getUsername(), PaybackStatus.UNPAID);
+        if (unpaidPaybackPageList.isEmpty()) {
             throw new IllegalArgumentException("Unpaid Payback list empty!");
         }
-        Optional<Payback> payback = this.paybackRepository.findByBorrowerOrLender(paybackPageRequest.getUsername(),paybackPageRequest.getUsername());
-        if(payback.isEmpty()){
-            throw new IllegalArgumentException("Payback not found!");
+        List<PaybackPageResponse> paybackPageResponseList = new ArrayList<>();
+        for (Payback payback:unpaidPaybackPageList
+             ) {
+            Double interest = interestService.calculateInterestForPaybackAccept(payback.getId());
+
+            paybackPageResponseList.add(PaybackToPaybackPageResponseList.toPaybackPageResponseList(payback,interest));
         }
-        Double interest = interestService.calculateInterestForPaybackAccept(payback.get().getId());
-        List<PaybackPageResponse> unpaidPaybackPageResponseList = PaybackToPaybackPageResponseList.toPaybackPageResponseList(unpaidPaybackPageList,interest);
-        return new CustomResponseHandler<>("0","Unpaid Payback Page Retrieved!",unpaidPaybackPageResponseList);
+
+        return new CustomResponseHandler<>("0", "Unpaid Payback Page Retrieved!", paybackPageResponseList);
     }
 
 }

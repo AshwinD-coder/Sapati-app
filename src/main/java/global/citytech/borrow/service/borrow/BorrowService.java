@@ -8,14 +8,13 @@ import global.citytech.borrow.service.mail.BorrowMailService;
 import global.citytech.platform.common.enums.RequestStatus;
 import global.citytech.platform.common.enums.UserType;
 import global.citytech.platform.common.response.CustomResponseHandler;
-import global.citytech.platform.email.EmailConfiguration;
-import global.citytech.platform.email.EmailService;
+import global.citytech.platform.common.email.EmailConfiguration;
+import global.citytech.platform.common.email.EmailSender;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
 import jakarta.inject.Inject;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
@@ -31,51 +30,54 @@ public class BorrowService {
         this.borrowRepository = borrowRepository;
         this.userRepository = userRepository;
     }
+    public void borrowMail(Borrow borrow){
+        EmailConfiguration emailConfigurationForLender = borrowMailService.setEmailConfigurationOfBorrowMailForLender(borrow);
+        EmailSender.sendMail(emailConfigurationForLender);
+        EmailConfiguration emailConfigurationForBorrower = borrowMailService.setEmailConfigurationOfBorrowMailForBorrower(borrow);
+        EmailSender.sendMail(emailConfigurationForBorrower);
+    }
 
-    public CustomResponseHandler<String> requestMoney(BorrowDto borrowDto) throws ParseException {
+    public CustomResponseHandler<String> borrowMoney(BorrowDto borrowDto) throws ParseException {
         Borrow borrow = BorrowDtoToBorrow.toBorrow(borrowDto);
-        validateRequest(borrowDto);
+        validateRequest(borrow);
         this.borrowRepository.save(borrow);
-        EmailConfiguration emailConfiguration = borrowMailService.setEmailConfigurationForBorrowMailLender(borrow);
-        EmailService.sendMail(emailConfiguration);
+        borrowMail(borrow);
         return new CustomResponseHandler<>("0", "Money Request Complete!", null);
     }
 
 
-    public void validateReturnDate(BorrowDto borrowDto) throws ParseException {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    public void validateReturnDate(Borrow borrow) throws ParseException {
         Date currentDate = new Date();
-        Date returnDate = simpleDateFormat.parse(borrowDto.getReturnDate());
-        if (currentDate.after(returnDate)) {
+        if (currentDate.after(borrow.getReturnDate())) {
             throw new IllegalArgumentException("Return date must be at least a day after current date i.e " + currentDate);
         }
     }
 
-    public void validateAmount(BorrowDto borrowDto) {
-        if (borrowDto.getAmount() < 0) {
+    public void validateAmount(Borrow borrow) {
+        if (borrow.getAmount() < 0) {
             throw new IllegalArgumentException("Amount cannot be negative!");
         }
-        if (borrowDto.getAmount() == 0) {
+        if (borrow.getAmount() == 0) {
             throw new IllegalArgumentException("Amount cannot be zero!");
         }
-        if (borrowDto.getAmount() > 50000) {
+        if (borrow.getAmount() > 50000) {
             throw new IllegalArgumentException("Request Amount Limit Exceeded! Max Limit Nrs.50000");
         }
-        if (borrowDto.getAmount().toString().isBlank() || borrowDto.getAmount().toString().isEmpty()) {
+        if (borrow.getAmount().toString().isBlank() || borrow.getAmount().toString().isEmpty()) {
             throw new IllegalArgumentException("Request Amount cannot be empty or blank!");
         }
     }
 
-    private void validatePreviousRequest(BorrowDto borrowDto) {
-        Optional<Borrow> moneyRequest = this.borrowRepository.findByBorrowerAndLenderAndRequestStatus(borrowDto.getBorrower(), borrowDto.getLender(), RequestStatus.PENDING);
+    private void validatePreviousRequest(Borrow borrow) {
+        Optional<Borrow> moneyRequest = this.borrowRepository.findByBorrowerAndLenderAndRequestStatus(borrow.getBorrower(), borrow.getLender(), RequestStatus.PENDING);
         if (moneyRequest.isPresent()) {
             throw new IllegalArgumentException("You have previous request pending!");
         }
     }
 
-    public void validateUsers(BorrowDto borrowDto) {
-        Optional<User> userRequestTo = this.userRepository.findByUsername(borrowDto.getLender());
-        Optional<User> userRequestFrom = this.userRepository.findByUsername(borrowDto.getBorrower());
+    public void validateUsers(Borrow borrow) {
+        Optional<User> userRequestTo = this.userRepository.findByUsername(borrow.getLender());
+        Optional<User> userRequestFrom = this.userRepository.findByUsername(borrow.getBorrower());
         if (userRequestTo.isEmpty() || userRequestFrom.isEmpty()) {
             throw new IllegalArgumentException("No such user to request!");
         }
@@ -97,13 +99,27 @@ public class BorrowService {
         if (userRequestTo.get().getUserType().compareTo(UserType.LENDER) != 0) {
             throw new IllegalArgumentException("Only Lender can be requested for money!");
         }
+        if(userRequestFrom.get().getBlacklistStatus().equals(true)){
+            throw new IllegalArgumentException("Borrower is blacklisted!");
+        }
+        if(userRequestTo.get().getBlacklistStatus().equals(true)){
+            throw new IllegalArgumentException("Lender is blacklisted!");
+        }
+
     }
 
-    public void validateRequest(BorrowDto borrowDto) throws ParseException {
-        validateUsers(borrowDto);
-        validatePreviousRequest(borrowDto);
-        validateAmount(borrowDto);
-        validateReturnDate(borrowDto);
+    public void validateRequest(Borrow borrow) throws ParseException {
+        validateUsers(borrow);
+        validatePreviousRequest(borrow);
+        validateAmount(borrow);
+        validateReturnDate(borrow);
+        validateInterestRate(borrow);
+    }
+
+    private void validateInterestRate(Borrow borrow) {
+        if(borrow.getInterestRate()<0.0){
+            throw new IllegalArgumentException("Interest Rate cannot be less than 0.0");
+        }
     }
 
 

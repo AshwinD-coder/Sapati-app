@@ -11,6 +11,14 @@ public class UserLoginResponse {
     private String token;
     private UserType userType;
 
+    public UserLoginResponse(String username, String token, UserType userType) {
+        this.username = username;
+        this.token = token;
+        this.userType = userType;
+    }
+
+    public UserLoginResponse() {
+    }
 
     public String getUsername() {
         return username;
@@ -34,5 +42,14 @@ public class UserLoginResponse {
 
     public void setUserType(UserType userType) {
         this.userType = userType;
+    }
+
+    @Override
+    public String toString() {
+        return "UserLoginResponse{" +
+                "username='" + username + '\'' +
+                ", token='" + token + '\'' +
+                ", userType=" + userType +
+                '}';
     }
 }

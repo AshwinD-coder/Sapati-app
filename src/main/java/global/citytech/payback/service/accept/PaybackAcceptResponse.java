@@ -9,11 +9,15 @@ import java.util.UUID;
 public class PaybackAcceptResponse {
     private UUID transactionId;
     private PaybackStatus paybackStatus;
+    private Double totalPaybackWithInterest;
+    private Double remainingAmount;
     private String paybackCompletedOn;
 
-    public PaybackAcceptResponse(UUID transactionId, PaybackStatus paybackStatus, String paybackCompletedOn) {
+    public PaybackAcceptResponse(UUID transactionId, PaybackStatus paybackStatus, Double totalPaybackWithInterest, Double remainingAmount, String paybackCompletedOn) {
         this.transactionId = transactionId;
         this.paybackStatus = paybackStatus;
+        this.totalPaybackWithInterest = totalPaybackWithInterest;
+        this.remainingAmount = remainingAmount;
         this.paybackCompletedOn = paybackCompletedOn;
     }
 
@@ -35,6 +39,22 @@ public class PaybackAcceptResponse {
 
     public void setPaybackStatus(PaybackStatus paybackStatus) {
         this.paybackStatus = paybackStatus;
+    }
+
+    public Double getTotalPaybackWithInterest() {
+        return totalPaybackWithInterest;
+    }
+
+    public void setTotalPaybackWithInterest(Double totalPaybackWithInterest) {
+        this.totalPaybackWithInterest = totalPaybackWithInterest;
+    }
+
+    public Double getRemainingAmount() {
+        return remainingAmount;
+    }
+
+    public void setRemainingAmount(Double remainingAmount) {
+        this.remainingAmount = remainingAmount;
     }
 
     public String getPaybackCompletedOn() {

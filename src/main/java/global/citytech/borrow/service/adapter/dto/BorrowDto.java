@@ -6,7 +6,7 @@ import io.micronaut.serde.annotation.Serdeable;
 @Introspected
 @Serdeable
 public class BorrowDto {
-    private String borrower;
+
     private String lender;
     private Integer amount;
     private Double interestRate;
@@ -14,8 +14,7 @@ public class BorrowDto {
 
     private String returnDate;
 
-    public BorrowDto(String borrower, String lender, Integer amount, Double interestRate, String remarks, String returnDate) {
-        this.borrower = borrower;
+    public BorrowDto(String lender, Integer amount, Double interestRate, String remarks, String returnDate) {
         this.lender = lender;
         this.amount = amount;
         this.interestRate = interestRate;
@@ -54,14 +53,6 @@ public class BorrowDto {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
-    }
-
-    public String getBorrower() {
-        return borrower;
-    }
-
-    public void setBorrower(String borrower) {
-        this.borrower = borrower;
     }
 
     public String getReturnDate() {

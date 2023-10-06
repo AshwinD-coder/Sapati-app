@@ -1,5 +1,7 @@
 package global.citytech.user.service.verifyemail;
 
+import global.citytech.platform.common.exceptions.CustomException;
+import global.citytech.platform.common.exceptions.ExceptionCode;
 import global.citytech.platform.common.response.CustomResponseHandler;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
@@ -16,16 +18,20 @@ public class UserEmailVerificationService {
         this.userRepository = userRepository;
     }
 
-    public CustomResponseHandler<String> verifyEmail(UserEmailVerificationDto userEmailVerificationDto) {
+
+    public CustomResponseHandler<String> verifyEmail(UserEmailVerificationDto userEmailVerificationDto) throws CustomException {
             Optional<User> user = this.userRepository.findByEmail(userEmailVerificationDto.getEmail());
             if (user.isPresent()) {
                 if (user.get().getVerifyStatus().equals(false)) {
-                    user.get().setVerifyStatus(true);
-                    this.userRepository.update(user.get());
-                    return new CustomResponseHandler<>("0","Success","User Verified!");
-                } else throw new IllegalArgumentException("User Already Verified!");
+                    if(user.get().getOtp().equals(userEmailVerificationDto.getOtp())) {
+                        user.get().setVerifyStatus(true);
+                        this.userRepository.update(user.get());
+                        return new CustomResponseHandler<>("0", "Success", "User Verified!");
+                    }
+                    else throw new CustomException(ExceptionCode.OTP_INCORRECT);
+                } else throw new CustomException(ExceptionCode.EMAIL_ALREADY_VERIFIED);
             } else {
-                throw new IllegalArgumentException("Cannot find user to verify!");
+                throw new CustomException(ExceptionCode.USER_NOT_FOUND);
             }
     }
 }

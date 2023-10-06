@@ -1,7 +1,7 @@
-package global.citytech.platform.email;
+package global.citytech.platform.common.email;
 
 public class EmailConfiguration {
-    private  static final  String fromEmail = "appsapati@gmail.com";
+    private final String fromEmail = "appsapati@gmail.com";
     private String toEmail;
     private String subject;
     private String htmlContent;

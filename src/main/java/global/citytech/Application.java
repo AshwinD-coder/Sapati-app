@@ -2,7 +2,6 @@ package global.citytech;
 
 import io.micronaut.runtime.Micronaut;
 
-import java.io.IOException;
 
 public class Application {
 

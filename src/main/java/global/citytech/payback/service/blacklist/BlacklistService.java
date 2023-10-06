@@ -1,4 +1,4 @@
-package global.citytech.payback.service.deadline;
+package global.citytech.payback.service.blacklist;
 
 import global.citytech.payback.repository.Payback;
 import global.citytech.payback.repository.PaybackRepository;
@@ -11,30 +11,30 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-public class DeadlineService {
+public class BlacklistService {
     @Inject
     private PaybackRepository paybackRepository;
 
     @Inject
     private UserRepository userRepository;
 
-    public DeadlineService(PaybackRepository paybackRepository, UserRepository userRepository) {
+    public BlacklistService(PaybackRepository paybackRepository, UserRepository userRepository) {
         this.paybackRepository = paybackRepository;
         this.userRepository = userRepository;
     }
 
-    public void checkPaybackDeadline() {
+    public void blacklistBorrowerIfDeadlineCrossed() {
         List<Payback> paybackList = this.paybackRepository.findByPaybackStatus(PaybackStatus.UNPAID);
         Date currentDate = new Date();
         for (Payback payback : paybackList
         ) {
             if (currentDate.after(payback.getPaybackDeadline())) {
                 Optional<User> borrower = this.userRepository.findByUsername(payback.getBorrower());
-                if (borrower.isEmpty()) {
-                    throw new IllegalArgumentException("Borrower has ran away!");
+                if (borrower.isPresent()) {
+                    borrower.get().setBlacklistStatus(true);
+                    this.userRepository.update(borrower.get());
                 }
-                borrower.get().setBlacklistStatus(true);
-                this.userRepository.update(borrower.get());
+
             }
 
         }

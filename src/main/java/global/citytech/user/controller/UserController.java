@@ -1,14 +1,15 @@
 package global.citytech.user.controller;
 
 
+import global.citytech.platform.common.exceptions.CustomException;
 import global.citytech.platform.common.response.CustomResponseHandler;
 import global.citytech.user.service.adapter.dto.UserCreateDto;
-import global.citytech.user.service.adapter.dto.UserDeleteDto;
+import global.citytech.user.service.adapter.dto.UserDeactivateDto;
 import global.citytech.user.service.adapter.dto.UserEmailVerificationDto;
 import global.citytech.user.service.adapter.dto.UserLoginDto;
 import global.citytech.user.service.create.UserCreateResponse;
 import global.citytech.user.service.create.UserCreateService;
-import global.citytech.user.service.delete.UserDeleteService;
+import global.citytech.user.service.deactivate.UserDeactivateService;
 import global.citytech.user.service.listusers.UserListResponse;
 import global.citytech.user.service.listusers.UserListService;
 import global.citytech.user.service.login.UserLoginResponse;
@@ -28,24 +29,18 @@ public class UserController {
     private UserCreateService userCreateService;
     @Inject
     private UserListService userListService;
-
     @Inject
-    private UserDeleteService userDeleteService;
+    private UserDeactivateService userDeactivateService;
     @Inject
     private UserEmailVerificationService userEmailVerificationService;
-
-    @Get("/")
-    public String index() {
-        return "User Page!!";
-    }
 
     @Post("/create")
     public HttpResponse<CustomResponseHandler<UserCreateResponse>> createUserAndCashAccount(@Body UserCreateDto userCreateDTO) {
         try {
             return HttpResponse.ok().body(userCreateService.createUserAndCashAccount(userCreateDTO));
-        } catch (Exception e) {
+        } catch (CustomException e) {
             e.printStackTrace();
-            return HttpResponse.badRequest().body(new CustomResponseHandler<>("0", e.getMessage(), null));
+            return HttpResponse.badRequest().body(new CustomResponseHandler<>(e.getErrorCode().toString(), e.getErrorMessage(), null));
         }
     }
 
@@ -54,21 +49,19 @@ public class UserController {
     public HttpResponse<CustomResponseHandler<UserLoginResponse>> loginUser(@Body UserLoginDto userLoginDTO) {
         try {
             return HttpResponse.ok().body(userLoginService.loginUserAccount(userLoginDTO));
-        } catch (Exception e) {
+        } catch (CustomException e) {
             e.printStackTrace();
-            return HttpResponse.badRequest().body(new CustomResponseHandler<>("0", e.getMessage(), null));
+            return HttpResponse.badRequest().body(new CustomResponseHandler<>(e.getErrorCode(), e.getErrorMessage(), null));
         }
     }
 
-    @Get("/verify/{email}")
-    public HttpResponse<CustomResponseHandler<String>> verifyUserEmail(@PathVariable  String email) {
+    @Post("/verify")
+    public HttpResponse<CustomResponseHandler<String>> verifyUserEmail(@Body UserEmailVerificationDto userEmailVerificationDto) {
         try {
-            UserEmailVerificationDto userEmailVerificationDto = new UserEmailVerificationDto();
-            userEmailVerificationDto.setEmail(email);
             return HttpResponse.ok().body(userEmailVerificationService.verifyEmail(userEmailVerificationDto));
-        } catch (Exception e) {
+        } catch (CustomException e) {
             e.printStackTrace();
-            return HttpResponse.badRequest().body(new CustomResponseHandler<>("0", e.getMessage(), null));
+            return HttpResponse.badRequest().body(new CustomResponseHandler<>(e.getErrorCode(), e.getErrorMessage(), null));
         }
     }
 
@@ -76,19 +69,19 @@ public class UserController {
     public HttpResponse<CustomResponseHandler<List<UserListResponse>>> listUsers() {
         try {
             return HttpResponse.ok().body(userListService.listUsers());
-        } catch (Exception e) {
-            return HttpResponse.notFound(new CustomResponseHandler<>("0", e.getMessage(), null));
+        } catch (CustomException e) {
+            return HttpResponse.notFound(new CustomResponseHandler<>(e.getErrorCode(), e.getErrorMessage(), null));
         }
     }
 
-    @Post("/delete")
-    public HttpResponse<CustomResponseHandler<String>> delete(@Body UserDeleteDto userDeleteDto) {
+    @Post("/deactivate")
+    public HttpResponse<CustomResponseHandler<String>> deactivate(@Body UserDeactivateDto userDeactivateDto) {
         try {
-            userDeleteService.deleteUser(userDeleteDto);
-            return HttpResponse.ok().body(new CustomResponseHandler<>("0", "User Deletion Success", null));
-        } catch (Exception e) {
+            userDeactivateService.deactivateUser(userDeactivateDto);
+            return HttpResponse.ok().body(new CustomResponseHandler<>("0", "SUCCESS", "User Deactivated!"));
+        } catch (CustomException e) {
             e.printStackTrace();
-            return HttpResponse.badRequest().body(new CustomResponseHandler<>("0",e.getMessage(),null));
+            return HttpResponse.badRequest().body(new CustomResponseHandler<>(e.getErrorCode(), e.getErrorMessage(), null));
         }
     }
 

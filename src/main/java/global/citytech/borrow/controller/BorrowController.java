@@ -5,7 +5,6 @@ import global.citytech.borrow.service.acceptreject.AcceptRejectResponse;
 import global.citytech.borrow.service.acceptreject.AcceptRejectService;
 import global.citytech.borrow.service.adapter.dto.BorrowDto;
 import global.citytech.borrow.service.borrow.BorrowService;
-import global.citytech.borrow.service.borrowpage.BorrowPageRequest;
 import global.citytech.borrow.service.borrowpage.BorrowPageResponse;
 import global.citytech.borrow.service.borrowpage.BorrowPageService;
 import global.citytech.platform.common.response.CustomResponseHandler;
@@ -31,15 +30,10 @@ public class BorrowController {
     @Inject
     private AcceptRejectService acceptRejectService;
 
-    @Get("/")
-    public String index() {
-        return "Money Request Page!";
-    }
-
     @Post("/")
     public HttpResponse<CustomResponseHandler<String>> borrowMoney(@Body BorrowDto borrowDto) throws ParseException {
         try {
-            return HttpResponse.ok().body(borrowService.requestMoney(borrowDto));
+            return HttpResponse.ok().body(borrowService.borrowMoney(borrowDto));
         } catch (Exception e) {
             e.printStackTrace();
             return HttpResponse.badRequest().body(new CustomResponseHandler<>("0", e.getMessage(), null));
@@ -50,12 +44,11 @@ public class BorrowController {
     public HttpResponse<CustomResponseHandler<String>> getImage(
             CompletedFileUpload lender, @Part(value = "amount") Integer amount,
             @Part(value = "interestRate") Double interestRate,
-             @Part("returnDate") String returnDate, @Part("remarks") String remarks,
-            @Part("borrower") String borrower) {
+             @Part("returnDate") String returnDate, @Part("remarks") String remarks) {
         try {
             UserQrRequest userQrRequest = UserQrService.readQR(lender.getFilename());
-            BorrowDto borrowDto = new BorrowDto(borrower, userQrRequest.getUsername(), amount,interestRate ,remarks, returnDate);
-            return HttpResponse.ok().body(borrowService.requestMoney(borrowDto));
+            BorrowDto borrowDto = new BorrowDto( userQrRequest.getUsername(), amount,interestRate ,remarks, returnDate);
+            return HttpResponse.ok().body(borrowService.borrowMoney(borrowDto));
         } catch (Exception e) {
             e.printStackTrace();
             return HttpResponse.badRequest(new CustomResponseHandler<>("0", e.getMessage(), null));
@@ -63,40 +56,40 @@ public class BorrowController {
     }
 
 
-    @Post("/pending")
-    public HttpResponse<CustomResponseHandler<List<BorrowPageResponse>>> viewPendingPage(@Body BorrowPageRequest borrowPageRequest) {
+    @Get("/pending")
+    public HttpResponse<CustomResponseHandler<List<BorrowPageResponse>>> viewPendingPage() {
         try {
-            return HttpResponse.ok().body(borrowPageService.viewPendingPage(borrowPageRequest));
+            return HttpResponse.ok().body(borrowPageService.viewPendingPage());
         } catch (Exception e) {
             e.printStackTrace();
             return HttpResponse.notFound(new CustomResponseHandler<>("0", e.getMessage(), null));
         }
     }
 
-    @Post("/accepted")
-    public HttpResponse<CustomResponseHandler<List<BorrowPageResponse>>> viewAcceptedPage(@Body BorrowPageRequest borrowPageRequest) {
+    @Get("/accepted")
+    public HttpResponse<CustomResponseHandler<List<BorrowPageResponse>>> viewAcceptedPage() {
         try {
-            return HttpResponse.ok().body(borrowPageService.viewAcceptedPage(borrowPageRequest));
+            return HttpResponse.ok().body(borrowPageService.viewAcceptedPage());
         } catch (Exception e) {
             e.printStackTrace();
             return HttpResponse.notFound(new CustomResponseHandler<>("0", e.getMessage(), null));
         }
     }
 
-    @Post("/rejected")
-    public HttpResponse<CustomResponseHandler<List<BorrowPageResponse>>> viewRejectedPage(@Body BorrowPageRequest borrowPageRequest) {
+    @Get("/rejected")
+    public HttpResponse<CustomResponseHandler<List<BorrowPageResponse>>> viewRejectedPage() {
         try {
-            return HttpResponse.ok().body(borrowPageService.viewRejectedPage(borrowPageRequest));
+            return HttpResponse.ok().body(borrowPageService.viewRejectedPage());
         } catch (Exception e) {
             e.printStackTrace();
             return HttpResponse.notFound(new CustomResponseHandler<>("0", e.getMessage(), null));
         }
     }
 
-    @Post("/expired")
-    public HttpResponse<CustomResponseHandler<List<BorrowPageResponse>>> viewExpiredPage(@Body BorrowPageRequest borrowPageRequest) {
+    @Get("/expired")
+    public HttpResponse<CustomResponseHandler<List<BorrowPageResponse>>> viewExpiredPage() {
         try {
-            return HttpResponse.ok().body(borrowPageService.viewExpiredPage(borrowPageRequest));
+            return HttpResponse.ok().body(borrowPageService.viewExpiredPage());
         } catch (Exception e) {
             return HttpResponse.badRequest().body(new CustomResponseHandler<>("0", e.getMessage(), null));
         }

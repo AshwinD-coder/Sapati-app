@@ -7,18 +7,10 @@ import io.micronaut.serde.annotation.Serdeable;
 @Serdeable
 public class CashDepositDto {
 
-    private String username;
+
     private Double amount;
-    public String getUsername() {
-        return username;
-    }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public CashDepositDto(String username, Double amount) {
-        this.username = username;
+    public CashDepositDto(Double amount) {
         this.amount = amount;
     }
 

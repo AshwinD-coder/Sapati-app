@@ -10,8 +10,6 @@ import java.util.UUID;
 public class AcceptRejectRequest {
     private UUID transactionId;
 
-    private String lenderUsername;
-
     public UUID getTransactionId() {
         return transactionId;
     }
@@ -20,16 +18,7 @@ public class AcceptRejectRequest {
         this.transactionId = transactionId;
     }
 
-    public AcceptRejectRequest(UUID transactionId, String lenderUsername) {
+    public AcceptRejectRequest(UUID transactionId) {
         this.transactionId = transactionId;
-        this.lenderUsername = lenderUsername;
-    }
-
-    public String getLenderUsername() {
-        return lenderUsername;
-    }
-
-    public void setLenderUsername(String lenderUsername) {
-        this.lenderUsername = lenderUsername;
     }
 }

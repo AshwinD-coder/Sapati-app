@@ -41,7 +41,9 @@ public class User {
     @Column(name = "is_active")
     private Boolean activeStatus;
 
-    public User(Long userId, String username, String password, String email, String phoneNumber, UserType userType, Timestamp createdAt, Boolean verifyStatus, Boolean blacklistStatus, Boolean activeStatus) {
+    private String otp;
+
+    public User(Long userId, String username, String password, String email, String phoneNumber, UserType userType, Timestamp createdAt, Boolean verifyStatus, Boolean blacklistStatus, Boolean activeStatus, String otp) {
         this.userId = userId;
         this.username = username;
         this.password = password;
@@ -52,6 +54,7 @@ public class User {
         this.verifyStatus = verifyStatus;
         this.blacklistStatus = blacklistStatus;
         this.activeStatus = activeStatus;
+        this.otp = otp;
     }
 
     public User() {
@@ -138,8 +141,11 @@ public class User {
         this.activeStatus = activeStatus;
     }
 
-    @Override
-    public String toString() {
-        return "User{" + "userId=" + userId + ", username='" + username + '\'' + ", email='" + email + '\'' + ", phoneNumber='" + phoneNumber + '\'' + '}';
+    public String getOtp() {
+        return otp;
+    }
+
+    public void setOtp(String otp) {
+        this.otp = otp;
     }
 }

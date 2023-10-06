@@ -9,11 +9,9 @@ import java.util.UUID;
 @Serdeable
 public class PaybackAcceptRequest {
     private UUID transactionId;
-    private String borrower;
 
-    public PaybackAcceptRequest(UUID transactionId, String borrower) {
+    public PaybackAcceptRequest(UUID transactionId) {
         this.transactionId = transactionId;
-        this.borrower = borrower;
     }
 
     public UUID getTransactionId() {
@@ -24,11 +22,5 @@ public class PaybackAcceptRequest {
         this.transactionId = transactionId;
     }
 
-    public String getBorrower() {
-        return borrower;
-    }
 
-    public void setBorrower(String borrower) {
-        this.borrower = borrower;
-    }
 }
