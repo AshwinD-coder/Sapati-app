@@ -1,0 +1,682 @@
+{
+	"info": {
+		"_postman_id": "3f644d9f-5d07-4a0c-993d-b6236c1e1f78",
+		"name": "Ashwin Dhougoda",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29426982"
+	},
+	"item": [
+		{
+			"name": "Borrow",
+			"item": [
+				{
+					"name": "Request Money",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Im1hdWxpayIsInJvbGUiOiJCT1JST1dFUiIsImlhdCI6MTY5NjU2ODMwMSwiZXhwIjoxNjk2NTcxOTAxfQ.bF2EL7ZdmyO4Kx8HIzLpsX9ZF2CBFK8liPZiekSMkkw",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"lender\": \"ashwin\",\r\n    \"amount\": 2000,\r\n    \"interestRate\": 7.50,\r\n    \"remarks\": \"testing expiry Bill\",\r\n    \"returnDate\": \"2023-10-10\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/money-request",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"money-request"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View Request Page (PENDING)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFzaHdpbiIsInJvbGUiOiJMRU5ERVIiLCJpYXQiOjE2OTY1Njg1NzMsImV4cCI6MTY5NjU3MjE3M30.jaqjqLcHgBCD58FHQBa62QiKVVO8qIUOz4ly-XGoBWA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/money-request/pending",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"money-request",
+								"pending"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View Request Page (ACCEPTED)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Im1hZ2FudGUiLCJyb2xlIjoiQk9SUk9XRVIiLCJpYXQiOjE2OTY0MjkwNDEsImV4cCI6MTY5NjQzMjY0MX0.h4P66UMkSO0abW6zddq0uk3Ie5U-DaFZrjH57fWe1Ds",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/money-request/accepted",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"money-request",
+								"accepted"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View Request Page (REJECTED)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Im1hZ2FudGUiLCJyb2xlIjoiQk9SUk9XRVIiLCJpYXQiOjE2OTY1ODcyNzcsImV4cCI6MTY5NjU5MDg3N30.V4FEmQT0gyjptOgaPl8p_h78uVG_GflfqwDUDyMaMAc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/money-request/rejected",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"money-request",
+								"rejected"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View Request Page (EXPIRED)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Im1hZ2FudGUiLCJyb2xlIjoiQk9SUk9XRVIiLCJpYXQiOjE2OTY1ODcyNzcsImV4cCI6MTY5NjU5MDg3N30.V4FEmQT0gyjptOgaPl8p_h78uVG_GflfqwDUDyMaMAc",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/money-request/expired",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"money-request",
+								"expired"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accept Money Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFzaHdpbiIsInJvbGUiOiJMRU5ERVIiLCJpYXQiOjE2OTY1NjcwMzQsImV4cCI6MTY5NjU3MDYzNH0.s00ocKRRWw6EVl6NVVnujk8KBVjd6pWFadLSX24_MuY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"transactionId\":\"4aeccd5b-17d8-4010-8ac8-be77edc6c3bc\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/money-request/accept",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"money-request",
+								"accept"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reject Money Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFzaHdpbiIsInJvbGUiOiJMRU5ERVIiLCJpYXQiOjE2OTY1Njg1NzMsImV4cCI6MTY5NjU3MjE3M30.jaqjqLcHgBCD58FHQBa62QiKVVO8qIUOz4ly-XGoBWA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"transactionId\":\"f3b35db3-3529-4cc9-bf7c-f8ca59f1de2a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/money-request/reject",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"money-request",
+								"reject"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "QR Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNjk2NDMyMjc0LCJleHAiOjE2OTY0MzU4NzR9.GtaL9HlzzbbZz9rU9YYgUHDGLhNnV55p8Ol-IyQ4UMU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "returnDate",
+									"value": "2023-9-28",
+									"type": "text"
+								},
+								{
+									"key": "lender",
+									"type": "file",
+									"src": "/C:/Users/Administrator/IdeaProjects/myapp/src/main/java/global/citytech/platform/userqrfiles/sally_qr.jpg"
+								},
+								{
+									"key": "amount",
+									"value": "9000",
+									"type": "text"
+								},
+								{
+									"key": "remarks",
+									"value": "dinner bill",
+									"type": "text"
+								},
+								{
+									"key": "interestRate",
+									"value": "6.4",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8080/money-request/qr",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"money-request",
+								"qr"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cash",
+			"item": [
+				{
+					"name": "Deposit Cash",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFzaHdpbiIsInJvbGUiOiJMRU5ERVIiLCJpYXQiOjE2OTY1NjY1NTIsImV4cCI6MTY5NjU3MDE1Mn0.Tcpc6aTnohABY6vkGQIZvWAdDEGQjU8A6CQb4oLOAkM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"amount\":10000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/cash/deposit",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cash",
+								"deposit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Balance",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Im1hZ2FudGUiLCJyb2xlIjoiQk9SUk9XRVIiLCJpYXQiOjE2OTY0MTI1NzUsImV4cCI6MTY5NjQxNjE3NX0.vh7IGCXp7XG9Ymw16uvf2nQSMFwsQzEZi9SrLjigxbs",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/cash/balance",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cash",
+								"balance"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payback",
+			"item": [
+				{
+					"name": "Accept Payback",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Im1hZ2FudGUiLCJyb2xlIjoiQk9SUk9XRVIiLCJpYXQiOjE2OTY0MjkwNDEsImV4cCI6MTY5NjQzMjY0MX0.h4P66UMkSO0abW6zddq0uk3Ie5U-DaFZrjH57fWe1Ds",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"transactionId\":\"320d69dd-1f5c-4ffd-9cc4-c71fd34eacdc\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/payback",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"payback"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Payback Page (PAID)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Im1hZ2FudGUiLCJyb2xlIjoiQk9SUk9XRVIiLCJpYXQiOjE2OTY0MjkwNDEsImV4cCI6MTY5NjQzMjY0MX0.h4P66UMkSO0abW6zddq0uk3Ie5U-DaFZrjH57fWe1Ds",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/payback/paid",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"payback",
+								"paid"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Payback Page (UNPAID)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Im1hZ2FudGUiLCJyb2xlIjoiQk9SUk9XRVIiLCJpYXQiOjE2OTY0MjkwNDEsImV4cCI6MTY5NjQzMjY0MX0.h4P66UMkSO0abW6zddq0uk3Ie5U-DaFZrjH57fWe1Ds",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/payback/unpaid",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"payback",
+								"unpaid"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Create User(1)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"Admin@123\",\r\n    \"email\": \"appsapati@gmail.com\",\r\n    \"phoneNumber\": \"9861292963\",\r\n    \"userType\": \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/user/create",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User(2)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"maulik\",\r\n    \"password\": \"Maulik@123\",\r\n    \"email\": \"maulikbasnet@gmail.com\",\r\n    \"phoneNumber\": \"123456789\",\r\n    \"userType\": \"borrower\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/user/create",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "payload",
+									"value": "{}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "{}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"ashwin\",\r\n    \"password\":\"Ashwin@123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/user/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Email",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"maulikbasnet@gmail.com\",\r\n    \"otp\":\"16021\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/user/verify",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"verify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNjk2NTY2MDc0LCJleHAiOjE2OTY1Njk2NzR9.H4ujC8U0TSc6UebipNw7DDfxGVhh2uttfbyGkJg9q-8",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/user/list",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deactivate User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNjk2NDI2NzU3LCJleHAiOjE2OTY0MzAzNTd9.Szrd54jC5UKaJj_NGbQPz8hoxjnW923eFwsFsiYqxMY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":54\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/user/delete",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
